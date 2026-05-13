@@ -1,0 +1,181 @@
+import React from 'react';
+import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { useTheme } from '../hooks/useTheme';
+import { useMatchSubscription } from '../sockets/hooks/useMatchSubscription';
+import type { Match } from '../types/domain/match';
+import { LiveOddsBadge } from './LiveOddsBadge';
+import { StatusChip } from './StatusChip';
+import { Text } from './Text';
+
+export type MatchCardProps = {
+  match: Match;
+  onPress?: (matchId: string) => void;
+  onWatch?: (matchId: string) => void;
+};
+
+const isLiveStatus = (match: Match): boolean =>
+  match.status === 'live' || match.status === 'halftime';
+
+const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) => {
+  const { colors } = useTheme();
+  useMatchSubscription(isLiveStatus(match) ? match.id : []);
+
+  const score1Tokens = match.score.home.split(/\s+/);
+  const score2Tokens = match.score.away.split(/\s+/);
+  const status = match.clock ?? '';
+
+  return (
+    <TouchableOpacity
+      activeOpacity={onPress ? 0.85 : 1}
+      onPress={() => {
+
+      }}
+      style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
+      <View style={styles.headerRow}>
+        {isLiveStatus(match) ? (
+          <StatusChip variant="live" label="EN DIRECT" />
+        ) : null}
+        <Text
+          variant="caption"
+          weight="medium"
+          color={colors.textSecondary}
+          numberOfLines={1}
+          style={styles.comp}>
+          {match.competition}
+        </Text>
+        {status ? (
+          <Text variant="caption" weight="bold" color={colors.accent}>
+            {status}
+          </Text>
+        ) : null}
+      </View>
+
+      <View style={[styles.divider, { backgroundColor: colors.border }]} />
+
+      <View style={styles.mainRow}>
+        <View style={styles.teams}>
+          <Text
+            variant="body"
+            weight="bold"
+            color={colors.textPrimary}
+            numberOfLines={1}
+            style={styles.team1}>
+            {match.home.name}
+          </Text>
+          <Text
+            variant="body"
+            color={colors.textSecondary}
+            numberOfLines={1}
+            style={styles.team2}>
+            {match.away.name}
+          </Text>
+        </View>
+
+        <View style={styles.scoresCol}>
+          <View style={styles.scoreLine}>
+            {score1Tokens.map((tok, i) => (
+              <Text
+                key={`s1-${i}`}
+                weight="bold"
+                color={colors.textPrimary}
+                style={styles.scoreCell}>
+                {tok}
+              </Text>
+            ))}
+          </View>
+          <View style={[styles.scoreLine, styles.scoreLineSecond]}>
+            {score2Tokens.map((tok, i) => (
+              <Text
+                key={`s2-${i}`}
+                weight="bold"
+                color={colors.textPrimary}
+                style={styles.scoreCell}>
+                {tok}
+              </Text>
+            ))}
+          </View>
+        </View>
+
+        {/* {match.hasMedia ? ( */}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            Linking.openURL('https://betclic.onelink.me/oTcP/k6mnkp5v')
+          }}
+          style={[styles.voirBtn, { borderColor: colors.primary }]}>
+          <MaterialCommunityIcons name="play-box-outline" size={22} color={colors.primary} />
+          <Text variant="label" weight="bold" color={colors.primary} style={styles.voirLabel}>
+            Regarder
+          </Text>
+        </TouchableOpacity>
+        {/* ) : (
+          <View style={[styles.searchPlaceholder, {borderColor: colors.border}]}>
+            <MaterialCommunityIcons name="magnify" size={22} color={colors.textMuted} />
+          </View>
+        )} */}
+      </View>
+
+      <LiveOddsBadge matchId={match.id} />
+    </TouchableOpacity>
+  );
+};
+
+export const MatchCard = React.memo(MatchCardImpl);
+MatchCard.displayName = 'MatchCard';
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: 12,
+    borderWidth: 1,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 10,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  divider: {
+    height: 1,
+    marginBottom: 10,
+    marginHorizontal: -14,
+  },
+  searchPlaceholder: {
+    width: 56,
+    height: 56,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  comp: { flex: 1, marginLeft: 8, marginRight: 8 },
+  mainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  teams: { flex: 1, marginRight: 8 },
+  team1: { fontSize: 16, lineHeight: 20 },
+  team2: { fontSize: 15, lineHeight: 19, marginTop: 6 },
+  scoresCol: { marginRight: 12 },
+  scoreLine: { flexDirection: 'row' },
+  scoreLineSecond: { marginTop: 6 },
+  scoreCell: {
+    fontSize: 22,
+    lineHeight: 24,
+    minWidth: 22,
+    textAlign: 'center',
+    marginLeft: 6,
+  },
+  voirBtn: {
+    width: 60,
+    height: 56,
+    borderWidth: 1.5,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  voirLabel: { marginTop: 2, fontSize: 10, letterSpacing: 0.5 },
+});

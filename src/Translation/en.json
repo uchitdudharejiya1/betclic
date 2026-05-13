@@ -1,0 +1,43 @@
+{
+  "appName": "Betclic",
+  "nav": {
+    "sports": "Sports",
+    "live": "Live",
+    "programme": "Schedule",
+    "seeAll": "See all"
+  },
+  "header": {
+    "calendar": "Calendar",
+    "themeDay": "Day mode enabled",
+    "themeNight": "Night mode enabled"
+  },
+  "days": {
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun"
+  },
+  "sports": {
+    "live": "Live",
+    "football": "Football",
+    "basketball": "Basketball",
+    "tennis": "Tennis",
+    "volleyball": "Volleyball",
+    "hockey": "Ice hockey",
+    "martial": "Martial arts"
+  },
+  "match": {
+    "watch": "WATCH",
+    "live": "LIVE",
+    "set": "Set",
+    "scheduled": "Upcoming",
+    "finished": "Finished"
+  },
+  "actions": {
+    "seeAllMatches": "See all matches",
+    "close": "Close"
+  }
+}
