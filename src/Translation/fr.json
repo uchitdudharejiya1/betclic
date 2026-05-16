@@ -4,12 +4,13 @@
     "sports": "Sports",
     "live": "En direct",
     "programme": "Programme",
-    "seeAll": "Voir tout"
+    "seeAll": "Voir plus"
   },
   "header": {
     "calendar": "Calendrier",
     "themeDay": "Mode jour activé",
-    "themeNight": "Mode nuit activé"
+    "themeNight": "Mode nuit activé",
+    "selectLanguage": "Sélectionner la langue"
   },
   "days": {
     "mon": "Lun",
@@ -30,7 +31,7 @@
     "martial": "Arts martiaux"
   },
   "match": {
-    "watch": "REGARDER",
+    "watch": "Regarder",
     "live": "DIRECT",
     "set": "Set",
     "scheduled": "À venir",
@@ -39,5 +40,23 @@
   "actions": {
     "seeAllMatches": "Voir tous les matchs",
     "close": "Fermer"
+  },
+  "errors": {
+    "noLiveMatches": "Aucun match en direct pour le moment.",
+    "noDataAvailable": "Aucune donnée disponible",
+    "loadingError": "Une erreur est survenue. Veuillez réessayer.",
+    "networkError": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "unknownError": "Une erreur inattendue est survenue.",
+    "providerNotConfigured": "Le fournisseur pour {{sport}} n'est pas encore configuré. Bientôt disponible."
+  },
+  "ui": {
+    "sportsTitle": "SPORTS",
+    "oddsTitle": "COTES",
+    "todayTitle": "AUJOURD'HUI",
+    "liveBadge": "EN DIRECT",
+    "matchDetails": "Détails du match",
+    "matchNumber": "Match #{{matchId}}",
+    "match": "match",
+    "matches": "matchs"
   }
 }

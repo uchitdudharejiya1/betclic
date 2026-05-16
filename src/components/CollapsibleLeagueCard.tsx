@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {LayoutAnimation, Platform, StyleSheet, TouchableOpacity, UIManager, View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTranslation} from 'react-i18next';
 
 import type {LeagueMatch} from '../constants/leagueMatches';
 import {useTheme} from '../hooks/useTheme';
@@ -21,6 +22,7 @@ export const CollapsibleLeagueCard: React.FC<CollapsibleLeagueCardProps> = ({
   matches,
 }) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
   const liveCount = matches.filter(m => m.status === 'live').length;
@@ -41,13 +43,13 @@ export const CollapsibleLeagueCard: React.FC<CollapsibleLeagueCardProps> = ({
         {liveCount > 0 ? (
           <View style={[styles.liveBadge, {backgroundColor: 'rgba(225,0,20,0.18)'}]}>
             <Text variant="label" weight="bold" color={colors.primary}>
-              {liveCount} EN DIRECT
+              {liveCount} {t('ui.liveBadge')}
             </Text>
           </View>
         ) : null}
 
         <Text variant="caption" color={colors.textMuted} style={styles.count}>
-          {totalCount} match{totalCount > 1 ? 's' : ''}
+          {totalCount} {t(totalCount > 1 ? 'ui.matches' : 'ui.match')}
         </Text>
 
         <MaterialCommunityIcons

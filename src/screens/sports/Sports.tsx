@@ -1,6 +1,7 @@
 import React, {useMemo, useState} from 'react';
 import {
   ActivityIndicator,
+  Linking,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -18,6 +19,7 @@ import {Header} from '../../components/Header';
 import {Pill} from '../../components/Pill';
 import {SportRow} from '../../components/SportRow';
 import {Text} from '../../components/Text';
+import {useLanguageSpecificUrls} from '../../utils/urlRedirection';
 import {SportKey, isSportAvailable} from '../../config/sports';
 import {type DayItem} from '../../constants/days';
 import {SPORT_MENU} from '../../constants/sportMenu';
@@ -108,6 +110,7 @@ export const Sports: React.FC = () => {
 const ListContent: React.FC<{onPickSport: (id: DetailSport) => void}> = ({onPickSport}) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
+  const {openAllGames} = useLanguageSpecificUrls();
   const {data: allToday} = useFixtures(isoToday(), 'live');
   const leagueCountsBySport = useMemo(() => {
     if (!allToday) return new Map<string, number>();
@@ -126,7 +129,7 @@ const ListContent: React.FC<{onPickSport: (id: DetailSport) => void}> = ({onPick
   return (
     <ScrollView contentContainerStyle={styles.list}>
       <Text variant="caption" weight="bold" color={colors.textMuted} style={styles.sectionTitle}>
-        SPORTS
+        {t('ui.sportsTitle')}
       </Text>
       {SPORT_MENU.map(item => (
         <SportRow
@@ -139,8 +142,9 @@ const ListContent: React.FC<{onPickSport: (id: DetailSport) => void}> = ({onPick
       ))}
       <Button
         variant="primary"
-        label="Voir toutes les compétitions"
+        label={t('actions.seeAllMatches')}
         style={styles.cta}
+        onPress={openAllGames}
       />
     </ScrollView>
   );
@@ -184,17 +188,17 @@ const DetailContent: React.FC<{sportId: DetailSport; onBack: () => void}> = ({
       <ScrollView contentContainerStyle={styles.detailList}>
         {!available ? (
           <Text variant="body" color={colors.textMuted} align="center" style={styles.notice}>
-            Provider for {sportId} is not configured yet. Coming soon.
+            {t('errors.providerNotConfigured', {sport: sportId})}
           </Text>
         ) : isLoading ? (
           <ActivityIndicator color={colors.primary} style={styles.notice} />
         ) : error ? (
           <Text variant="body" color={colors.textSecondary} align="center" style={styles.notice}>
-            {(error as Error).message}
+            {t('errors.loadingError')}
           </Text>
         ) : grouped.length === 0 ? (
           <Text variant="body" color={colors.textMuted} align="center" style={styles.notice}>
-            No fixtures for today.
+            {t('errors.noDataAvailable')}
           </Text>
         ) : (
           grouped.map(g => (

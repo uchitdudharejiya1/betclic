@@ -73,8 +73,7 @@ export const Home: React.FC = () => {
       return (
         <View style={styles.empty}>
           <Text variant="body" color={colors.textSecondary} align="center">
-            Could not load matches.{'\n'}
-            {(error as Error).message}
+            {t('errors.unknownError')}
           </Text>
         </View>
       );
@@ -82,7 +81,7 @@ export const Home: React.FC = () => {
     return (
       <View style={styles.empty}>
         <Text variant="body" color={colors.textMuted} align="center">
-          No live matches right now.
+          {t('errors.noLiveMatches')}
         </Text>
       </View>
     );

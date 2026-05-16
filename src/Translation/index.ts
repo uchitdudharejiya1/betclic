@@ -1,19 +1,19 @@
 import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 
-import en from './en.json';
 import fr from './fr.json';
+import pl from './pl.json';
 
-export const SUPPORTED_LANGUAGES = ['fr', 'en'] as const;
+export const SUPPORTED_LANGUAGES = ['fr', 'pl'] as const;
 export type Language = (typeof SUPPORTED_LANGUAGES)[number];
 
 i18n.use(initReactI18next).init({
   resources: {
     fr: {translation: fr},
-    en: {translation: en},
+    pl: {translation: pl},
   },
   lng: 'fr',
-  fallbackLng: 'en',
+  fallbackLng: 'fr',
   interpolation: {escapeValue: false},
   compatibilityJSON: 'v4',
 });

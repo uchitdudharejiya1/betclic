@@ -20,6 +20,7 @@ import {ScheduledMatchRow} from '../../components/ScheduledMatchRow';
 import {Text} from '../../components/Text';
 import {Button} from '../../components/Button';
 import {ENV} from '../../config/env';
+import {useLanguageSpecificUrls} from '../../utils/urlRedirection';
 import {type DayItem} from '../../constants/days';
 import {SPORTS, type SportId} from '../../constants/sports';
 import {useFixtures} from '../../hooks/useFixtures';
@@ -68,8 +69,8 @@ export const Programme: React.FC = () => {
   const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>('wed');
   const [selectedSport, setSelectedSport] = useState<SportId>('live');
   const [calendarOpen, setCalendarOpen] = useState(false);
-
-  const {data, isLoading, isRefetching, refetch, error} = useFixtures(
+  const {openAllGames} = useLanguageSpecificUrls();
+  const {data, isLoading, error, refetch, isRefetching} = useFixtures(
     isoToday(),
     selectedSport,
   );
@@ -77,13 +78,8 @@ export const Programme: React.FC = () => {
   const sections = useMemo(() => buildSections(limited), [limited]);
 
   const openAll = useCallback(() => {
-    const base = ENV.PROGRAMME_WEB_URL;
-    if (!base) return;
-    const url = `${base}?sport=${encodeURIComponent(String(selectedSport))}&date=${encodeURIComponent(
-      isoToday(),
-    )}`;
-    Linking.openURL(url).catch(() => {});
-  }, [selectedSport]);
+    openAllGames();
+  }, [openAllGames]);
 
   return (
     <SafeAreaView edges={['bottom']} style={[styles.safe, {backgroundColor: colors.bg}]}>
@@ -121,7 +117,7 @@ export const Programme: React.FC = () => {
             weight="bold"
             color={colors.textMuted}
             style={styles.sectionTitle}>
-            AUJOURD'HUI
+            {t('ui.todayTitle')}
           </Text>
         }
         ListEmptyComponent={
@@ -130,11 +126,11 @@ export const Programme: React.FC = () => {
               <ActivityIndicator color={colors.primary} />
             ) : error ? (
               <Text variant="body" color={colors.textSecondary} align="center">
-                {(error as Error).message}
+                {t('errors.loadingError')}
               </Text>
             ) : (
               <Text variant="body" color={colors.textMuted} align="center">
-                No matches scheduled today.
+                {t('errors.noDataAvailable')}
               </Text>
             )}
           </View>
@@ -158,8 +154,8 @@ export const Programme: React.FC = () => {
         ListFooterComponent={
           <Button
             variant="primary"
-            label="Voir tous les matchs"
-            onPress={openAll}
+            label={t('actions.seeAllMatches')}
+            onPress={openAllGames}
             style={{paddingVertical: 14, alignSelf: 'stretch', marginTop: 12}}
           />
         }

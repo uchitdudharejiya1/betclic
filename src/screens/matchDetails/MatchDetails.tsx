@@ -3,6 +3,7 @@ import {useQueryClient} from '@tanstack/react-query';
 import React, {useMemo} from 'react';
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useTranslation} from 'react-i18next';
 
 import {MatchStatsPanel} from '../../components/MatchStatsPanel';
 import {OddsRow} from '../../components/OddsRow';
@@ -19,6 +20,7 @@ type MatchDetailsRoute = RouteProp<RootStackParamList, 'MatchDetails'>;
 
 export const MatchDetails: React.FC = () => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const route = useRoute<MatchDetailsRoute>();
   const {matchId, sport} = route.params;
   const sportKey = sport as SportKey;
@@ -47,24 +49,24 @@ export const MatchDetails: React.FC = () => {
         ) : (
           <View style={[styles.placeholder, {borderColor: colors.border}]}>
             <Text variant="body" color={colors.textMuted}>
-              Match #{matchId}
+              {t('ui.matchNumber', {matchId})}
             </Text>
           </View>
         )}
 
         <Text variant="caption" weight="bold" color={colors.textMuted} style={styles.section}>
-          ODDS
+          {t('ui.oddsTitle')}
         </Text>
 
         {oddsLoading && !odds ? (
           <ActivityIndicator color={colors.primary} style={styles.loader} />
         ) : oddsError && !odds ? (
           <Text variant="body" color={colors.textSecondary}>
-            {(oddsError as Error).message}
+            {t('errors.loadingError')}
           </Text>
         ) : !odds || odds.markets.length === 0 ? (
           <Text variant="body" color={colors.textMuted}>
-            No odds available yet.
+            {t('errors.noDataAvailable')}
           </Text>
         ) : (
           odds.markets

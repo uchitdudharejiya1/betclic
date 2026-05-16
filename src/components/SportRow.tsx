@@ -3,6 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {useTheme} from '../hooks/useTheme';
+import {useLanguageSpecificUrls} from '../utils/urlRedirection';
 import {Text} from './Text';
 
 export type SportRowProps = {
@@ -14,10 +15,19 @@ export type SportRowProps = {
 
 export const SportRow: React.FC<SportRowProps> = ({icon, label, count, onPress}) => {
   const {colors} = useTheme();
+  const {openAllCompetitions} = useLanguageSpecificUrls();
+  
+  const handlePress = () => {
+    if (onPress) {
+      onPress();
+    } else {
+      openAllCompetitions();
+    }
+  };
   return (
     <TouchableOpacity
       activeOpacity={0.85}
-      onPress={onPress}
+      onPress={handlePress}
       style={[styles.row, {backgroundColor: colors.card, borderColor: colors.border}]}>
       <View style={[styles.iconCircle, {backgroundColor: colors.cardAlt}]}>
         <Text variant="title" style={styles.iconText}>

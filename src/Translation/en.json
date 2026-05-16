@@ -4,7 +4,7 @@
     "sports": "Sports",
     "live": "Live",
     "programme": "Schedule",
-    "seeAll": "See all"
+    "seeAll": "See more"
   },
   "header": {
     "calendar": "Calendar",
@@ -39,5 +39,23 @@
   "actions": {
     "seeAllMatches": "See all matches",
     "close": "Close"
+  },
+  "errors": {
+    "noLiveMatches": "No live matches right now.",
+    "noDataAvailable": "No data available",
+    "loadingError": "Something went wrong. Please try again.",
+    "networkError": "Network error. Please check your connection.",
+    "unknownError": "An unexpected error occurred.",
+    "providerNotConfigured": "Provider for {{sport}} is not configured yet. Coming soon."
+  },
+  "ui": {
+    "sportsTitle": "SPORTS",
+    "oddsTitle": "ODDS",
+    "todayTitle": "TODAY",
+    "liveBadge": "LIVE",
+    "matchDetails": "Match details",
+    "matchNumber": "Match #{{matchId}}",
+    "match": "match",
+    "matches": "matches"
   }
 }

@@ -1,10 +1,12 @@
 import React from 'react';
 import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTranslation} from 'react-i18next';
 
 import { useTheme } from '../hooks/useTheme';
 import { useMatchSubscription } from '../sockets/hooks/useMatchSubscription';
 import type { Match } from '../types/domain/match';
+import {useLanguageSpecificUrls} from '../utils/urlRedirection';
 import { LiveOddsBadge } from './LiveOddsBadge';
 import { StatusChip } from './StatusChip';
 import { Text } from './Text';
@@ -20,6 +22,8 @@ const isLiveStatus = (match: Match): boolean =>
 
 const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) => {
   const { colors } = useTheme();
+  const {t} = useTranslation();
+  const {openMatch} = useLanguageSpecificUrls();
   useMatchSubscription(isLiveStatus(match) ? match.id : []);
 
   const score1Tokens = match.score.home.split(/\s+/);
@@ -29,13 +33,11 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
   return (
     <TouchableOpacity
       activeOpacity={onPress ? 0.85 : 1}
-      onPress={() => {
-
-      }}
+      onPress={openMatch}
       style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
       <View style={styles.headerRow}>
         {isLiveStatus(match) ? (
-          <StatusChip variant="live" label="EN DIRECT" />
+          <StatusChip variant="live" label={t('ui.liveBadge')} />
         ) : null}
         <Text
           variant="caption"
@@ -102,12 +104,12 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
-            Linking.openURL('https://betclic.onelink.me/oTcP/k6mnkp5v')
+            Linking.openURL('https://betclic.onelink.me/oTcP/10zx84uj')
           }}
           style={[styles.voirBtn, { borderColor: colors.primary }]}>
           <MaterialCommunityIcons name="play-box-outline" size={22} color={colors.primary} />
           <Text variant="label" weight="bold" color={colors.primary} style={styles.voirLabel}>
-            Regarder
+            {t('match.watch')}
           </Text>
         </TouchableOpacity>
         {/* ) : (
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   voirBtn: {
-    width: 60,
+    width: 65,
     height: 56,
     borderWidth: 1.5,
     borderRadius: 8,

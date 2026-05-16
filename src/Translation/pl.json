@@ -1,0 +1,62 @@
+{
+  "appName": "Betclic",
+  "nav": {
+    "sports": "Sporty",
+    "live": "Na żywo",
+    "programme": "Program",
+    "seeAll": "Zobacz więcej"
+  },
+  "header": {
+    "calendar": "Kalendarz",
+    "themeDay": "Tryb dzienny włączony",
+    "themeNight": "Tryb nocny włączony",
+    "selectLanguage": "Wybierz język"
+  },
+  "days": {
+    "mon": "Pon",
+    "tue": "Wt",
+    "wed": "Śr",
+    "thu": "Czw",
+    "fri": "Pt",
+    "sat": "Sob",
+    "sun": "Niedz"
+  },
+  "sports": {
+    "live": "Na żywo",
+    "football": "Piłka nożna",
+    "basketball": "Koszykówka",
+    "tennis": "Tenis",
+    "volleyball": "Siatkówka",
+    "hockey": "Hokej na lodzie",
+    "martial": "Sztuki walki"
+  },
+  "match": {
+    "watch": "Obejrzyj",
+    "live": "NA ŻYWO",
+    "set": "Set",
+    "scheduled": "Nadchodzące",
+    "finished": "Zakończone"
+  },
+  "actions": {
+    "seeAllMatches": "Zobacz wszystkie mecze",
+    "close": "Zamknij"
+  },
+  "errors": {
+    "noLiveMatches": "Brak meczów na żywo w tej chwili.",
+    "noDataAvailable": "Brak dostępnych danych",
+    "loadingError": "Coś poszło nie tak. Spróbuj ponownie.",
+    "networkError": "Błąd sieci. Sprawdź swoje połączenie.",
+    "unknownError": "Wystąpił nieoczekiwany błąd.",
+    "providerNotConfigured": "Dostawca dla {{sport}} nie jest jeszcze skonfigurowany. Wkrótce dostępny."
+  },
+  "ui": {
+    "sportsTitle": "SPORTY",
+    "oddsTitle": "KURSY",
+    "todayTitle": "DZISIAJ",
+    "liveBadge": "NA ŻYWO",
+    "matchDetails": "Szczegóły meczu",
+    "matchNumber": "Mecz #{{matchId}}",
+    "match": "mecz",
+    "matches": "mecze"
+  }
+}

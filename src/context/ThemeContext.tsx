@@ -21,15 +21,15 @@ export type ThemeContextValue = {
 };
 
 export const ThemeContext = createContext<ThemeContextValue>({
-  isDark: true,
-  colors: DARK_THEME_COLOR,
+  isDark: false,
+  colors: LIGHT_THEME_COLOR,
   toggleTheme: () => {},
 });
 
 export const ThemeProvider: React.FC<{children: React.ReactNode}> = ({
   children,
 }) => {
-  const [isDark, setIsDark] = useState<boolean>(true);
+  const [isDark, setIsDark] = useState<boolean>(false);
 
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY).then(stored => {

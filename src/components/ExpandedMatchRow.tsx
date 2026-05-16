@@ -1,8 +1,10 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Linking, Pressable, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import type {LeagueMatch} from '../constants/leagueMatches';
 import {useTheme} from '../hooks/useTheme';
+import {useLanguageSpecificUrls} from '../utils/urlRedirection';
 import {Text} from './Text';
 
 export type ExpandedMatchRowProps = {
@@ -12,6 +14,7 @@ export type ExpandedMatchRowProps = {
 
 export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast}) => {
   const {colors} = useTheme();
+  const {openMatch} = useLanguageSpecificUrls();
 
   let leftNode: React.ReactNode = null;
   if (match.status === 'live') {
@@ -45,7 +48,9 @@ export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast
     (match.status === 'live' || match.status === 'finished') && (match.s1 || match.s2);
 
   return (
-    <View style={[styles.row, !isLast && {borderBottomColor: colors.border, borderBottomWidth: 1}]}>
+    <TouchableOpacity 
+    onPress={openMatch}
+    style={[styles.row, !isLast && {borderBottomColor: colors.border, borderBottomWidth: 1}]}>
       <View style={styles.left}>{leftNode}</View>
       <View style={styles.middle}>
         <Text variant="body" weight="semibold" color={colors.textPrimary} numberOfLines={1}>
@@ -65,7 +70,7 @@ export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast
           </Text>
         </View>
       ) : null}
-    </View>
+    </TouchableOpacity>
   );
 };
 

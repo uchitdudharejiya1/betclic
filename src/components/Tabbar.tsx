@@ -1,12 +1,13 @@
 import type {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {useTheme} from '../hooks/useTheme';
 import {useLiveMatches} from '../hooks/useLiveMatches';
+import {useLanguageSpecificUrls} from '../utils/urlRedirection';
 import {BottomSheet} from './BottomSheet';
 import {Text} from './Text';
 
@@ -23,6 +24,7 @@ export const Tabbar: React.FC<BottomTabBarProps> = ({state, navigation}) => {
   const [seeAllOpen, setSeeAllOpen] = useState(false);
   const {data: liveAll} = useLiveMatches('live');
   const liveCount = liveAll?.length ?? 0;
+  const {openAllGames} = useLanguageSpecificUrls();
 
   const labels: Record<string, string> = {
     Sports: t('nav.sports'),
@@ -85,7 +87,7 @@ export const Tabbar: React.FC<BottomTabBarProps> = ({state, navigation}) => {
 
       <TouchableOpacity
         activeOpacity={0.85}
-        onPress={() => setSeeAllOpen(true)}
+        onPress={openAllGames}
         style={[styles.cta, {backgroundColor: colors.primary}]}>
         <MaterialCommunityIcons name="menu" size={20} color="#fff" />
         <Text variant="body" weight="bold" color="#fff" style={styles.ctaLabel}>

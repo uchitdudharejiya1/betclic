@@ -9,6 +9,7 @@ import {
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {Tabbar} from '../components/Tabbar';
 import {useTheme} from '../hooks/useTheme';
@@ -46,6 +47,7 @@ const Tabs: React.FC = () => (
 
 export const RootNavigator: React.FC = () => {
   const {isDark, colors} = useTheme();
+  const {t} = useTranslation();
 
   const navTheme = {
     ...(isDark ? DarkTheme : DefaultTheme),
@@ -66,7 +68,7 @@ export const RootNavigator: React.FC = () => {
         <Stack.Screen
           name="MatchDetails"
           component={MatchDetails}
-          options={{headerShown: true, title: 'Match details'}}
+          options={{headerShown: true, title: t('ui.matchDetails')}}
         />
       </Stack.Navigator>
     </NavigationContainer>
