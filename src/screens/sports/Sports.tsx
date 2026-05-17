@@ -1,3 +1,4 @@
+import {useQuery} from '@tanstack/react-query';
 import React, {useMemo, useState} from 'react';
 import {
   ActivityIndicator,
@@ -11,6 +12,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {matchRepository} from '../../api/repositories/matchRepository';
 import {BottomSheet} from '../../components/BottomSheet';
 import {Button} from '../../components/Button';
 import {CalendarComponent} from '../../components/CalendarComponent';
@@ -21,10 +23,9 @@ import {SportRow} from '../../components/SportRow';
 import {Text} from '../../components/Text';
 import {useLanguageSpecificUrls} from '../../utils/urlRedirection';
 import {SportKey, isSportAvailable} from '../../config/sports';
-import {type DayItem} from '../../constants/days';
+import {todayKey, type DayItem} from '../../constants/days';
 import {SPORT_MENU} from '../../constants/sportMenu';
 import {SPORTS, type SportId} from '../../constants/sports';
-import {useLiveMatches} from '../../hooks/useLiveMatches';
 import type {LeagueMatch, LeagueMatchStatus} from '../../constants/leagueMatches';
 import {useFixtures} from '../../hooks/useFixtures';
 import {useTheme} from '../../hooks/useTheme';
@@ -40,8 +41,6 @@ const SPORT_EMOJI: Record<string, string> = {
   hockey: '🏒',
   martial: '🥊',
 };
-
-const isoToday = (): string => new Date().toISOString().slice(0, 10);
 
 const mapStatus = (s: MatchStatus): LeagueMatchStatus => {
   if (s === 'live' || s === 'halftime') return 'live';
@@ -62,11 +61,16 @@ const matchToLeagueRow = (m: Match): LeagueMatch => ({
 export const Sports: React.FC = () => {
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>('wed');
+  const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>(todayKey());
   const [selectedSport, setSelectedSport] = useState<SportId>('live');
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [detailSport, setDetailSport] = useState<DetailSport | null>(null);
-  const {data: liveAll} = useLiveMatches('live');
+
+  const {data: liveAll} = useQuery<Match[]>({
+    queryKey: ['matches', 'live', 'live'],
+    queryFn: ({signal}) => matchRepository.allLive(signal),
+    enabled: false,
+  });
 
   return (
     <SafeAreaView edges={['bottom']} style={[styles.safe, {backgroundColor: colors.bg}]}>
@@ -95,9 +99,13 @@ export const Sports: React.FC = () => {
       </ScrollView>
 
       {detailSport ? (
-        <DetailContent sportId={detailSport} onBack={() => setDetailSport(null)} />
+        <DetailContent
+          sportId={detailSport}
+          date={selectedDayKey}
+          onBack={() => setDetailSport(null)}
+        />
       ) : (
-        <ListContent onPickSport={setDetailSport} />
+        <ListContent date={selectedDayKey} onPickSport={setDetailSport} />
       )}
 
       <BottomSheet visible={calendarOpen} onClose={() => setCalendarOpen(false)}>
@@ -107,11 +115,14 @@ export const Sports: React.FC = () => {
   );
 };
 
-const ListContent: React.FC<{onPickSport: (id: DetailSport) => void}> = ({onPickSport}) => {
+const ListContent: React.FC<{
+  date: string;
+  onPickSport: (id: DetailSport) => void;
+}> = ({date, onPickSport}) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
   const {openAllGames} = useLanguageSpecificUrls();
-  const {data: allToday} = useFixtures(isoToday(), 'live');
+  const {data: allToday} = useFixtures(date, 'live');
   const leagueCountsBySport = useMemo(() => {
     if (!allToday) return new Map<string, number>();
     const perSport = new Map<string, Set<string>>();
@@ -150,15 +161,16 @@ const ListContent: React.FC<{onPickSport: (id: DetailSport) => void}> = ({onPick
   );
 };
 
-const DetailContent: React.FC<{sportId: DetailSport; onBack: () => void}> = ({
-  sportId,
-  onBack,
-}) => {
+const DetailContent: React.FC<{
+  sportId: DetailSport;
+  date: string;
+  onBack: () => void;
+}> = ({sportId, date, onBack}) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
   const sportKey = sportId as SportKey;
   const available = isSportAvailable(sportKey);
-  const {data, isLoading, error} = useFixtures(isoToday(), sportId);
+  const {data, isLoading, error} = useFixtures(date, sportId);
 
   const grouped = useMemo(() => {
     if (!data) return [] as {league: string; matches: LeagueMatch[]}[];

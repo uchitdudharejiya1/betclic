@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useQuery} from '@tanstack/react-query';
 import React, {useCallback, useState} from 'react';
 import {
   ActivityIndicator,
@@ -12,14 +13,16 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 
+import {matchRepository} from '../../api/repositories/matchRepository';
 import {BottomSheet} from '../../components/BottomSheet';
 import {CalendarComponent} from '../../components/CalendarComponent';
 import {Header} from '../../components/Header';
 import {MatchCard} from '../../components/MatchCard';
 import {Pill} from '../../components/Pill';
 import {Text} from '../../components/Text';
-import {type DayItem} from '../../constants/days';
+import {todayKey, type DayItem} from '../../constants/days';
 import {SPORTS, type SportId} from '../../constants/sports';
+import {useFixtures} from '../../hooks/useFixtures';
 import {useTheme} from '../../hooks/useTheme';
 import {useLiveMatches} from '../../hooks/useLiveMatches';
 import type {RootStackParamList} from '../../navigation/RootNavigator';
@@ -38,13 +41,23 @@ export const Home: React.FC = () => {
   const {colors} = useTheme();
   const {t} = useTranslation();
   const navigation = useNavigation<Nav>();
-  const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>('wed');
+  const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>(todayKey());
   const [selectedSport, setSelectedSport] = useState<SportId>('live');
   const [calendarOpen, setCalendarOpen] = useState(false);
 
-  const {data, isLoading, isRefetching, refetch, error} =
-    useLiveMatches(selectedSport);
-  const {data: liveAll} = useLiveMatches('live');
+  const isToday = selectedDayKey === todayKey();
+  const liveQuery = useLiveMatches(selectedSport, {enabled: isToday});
+  const dateQuery = useFixtures(selectedDayKey, selectedSport, {
+    enabled: !isToday,
+  });
+  const activeQuery = isToday ? liveQuery : dateQuery;
+  const {data, isLoading, isRefetching, refetch, error} = activeQuery;
+
+  const {data: liveAll} = useQuery<Match[]>({
+    queryKey: ['matches', 'live', 'live'],
+    queryFn: ({signal}) => matchRepository.allLive(signal),
+    enabled: false,
+  });
 
   const handlePress = useCallback(
     (matchId: string) => {

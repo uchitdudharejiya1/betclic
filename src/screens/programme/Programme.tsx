@@ -21,7 +21,7 @@ import {Text} from '../../components/Text';
 import {Button} from '../../components/Button';
 import {ENV} from '../../config/env';
 import {useLanguageSpecificUrls} from '../../utils/urlRedirection';
-import {type DayItem} from '../../constants/days';
+import {todayKey, type DayItem} from '../../constants/days';
 import {SPORTS, type SportId} from '../../constants/sports';
 import {useFixtures} from '../../hooks/useFixtures';
 import {useTheme} from '../../hooks/useTheme';
@@ -36,12 +36,16 @@ const SPORT_EMOJI: Record<string, string> = {
   martial: '🥊',
 };
 
-const isoToday = (): string => new Date().toISOString().slice(0, 10);
-
 type Section = {
   title: string;
   icon: string;
-  data: Array<{id: string; t1: string; t2: string; time: string}>;
+  data: Array<{
+    id: string;
+    t1: string;
+    t2: string;
+    time: string;
+    status: Match['status'];
+  }>;
 };
 
 const buildSections = (matches: Match[]): Section[] => {
@@ -53,7 +57,13 @@ const buildSections = (matches: Match[]): Section[] => {
       minute: '2-digit',
     });
     const entry = map.get(key) ?? {sport: m.sport, data: []};
-    entry.data.push({id: m.id, t1: m.home.name, t2: m.away.name, time});
+    entry.data.push({
+      id: m.id,
+      t1: m.home.name,
+      t2: m.away.name,
+      time,
+      status: m.status,
+    });
     map.set(key, entry);
   }
   return Array.from(map.entries()).map(([title, {sport, data}]) => ({
@@ -66,12 +76,12 @@ const buildSections = (matches: Match[]): Section[] => {
 export const Programme: React.FC = () => {
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>('wed');
+  const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>(todayKey());
   const [selectedSport, setSelectedSport] = useState<SportId>('live');
   const [calendarOpen, setCalendarOpen] = useState(false);
   const {openAllGames} = useLanguageSpecificUrls();
   const {data, isLoading, error, refetch, isRefetching} = useFixtures(
-    isoToday(),
+    selectedDayKey,
     selectedSport,
   );
   const limited = useMemo(() => (data ?? []).slice(0, 10), [data]);
@@ -141,7 +151,12 @@ export const Programme: React.FC = () => {
           </View>
         )}
         renderItem={({item}) => (
-          <ScheduledMatchRow t1={item.t1} t2={item.t2} time={item.time} />
+          <ScheduledMatchRow
+            t1={item.t1}
+            t2={item.t2}
+            time={item.time}
+            status={item.status}
+          />
         )}
         stickySectionHeadersEnabled={false}
         refreshControl={

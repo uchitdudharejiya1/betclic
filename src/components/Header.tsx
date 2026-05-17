@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {DAYS, type DayItem} from '../constants/days';
+import {buildCenteredWeek, type DayItem} from '../constants/days';
 import {useLanguage} from '../hooks/useLanguage';
 import {useTheme} from '../hooks/useTheme';
 import {Text} from './Text';
@@ -25,6 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
   const [showLanguageSheet, setShowLanguageSheet] = useState(false);
+  const days = useMemo(() => buildCenteredWeek(), []);
 
   const languages = [
     { code: 'fr', name: 'Français', flag: '🇫🇷' },
@@ -70,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
       </View>
 
       <View style={styles.dayRail}>
-        {DAYS.map(day => {
+        {days.map(day => {
           const selected = day.key === selectedDayKey;
           return (
             <TouchableOpacity
@@ -83,15 +84,7 @@ export const Header: React.FC<HeaderProps> = ({
                 weight="semibold"
                 color="rgba(255,255,255,0.85)"
                 style={styles.dayLabel}>
-                {{
-                  mon: 'LUN',
-                  tue: 'MAR',
-                  wed: 'MER',
-                  thu: 'JEU',
-                  fri: 'VEN',
-                  sat: 'SAM',
-                  sun: 'DIM',
-                }[day.key]}
+                {t(`days.${day.weekdayKey}`).toUpperCase()}
               </Text>
               <Text
                 weight={selected ? 'bold' : 'semibold'}
@@ -99,11 +92,15 @@ export const Header: React.FC<HeaderProps> = ({
                 style={[styles.dayNumber, selected && styles.dayNumberSelected]}>
                 {String(day.date).padStart(2, '0')}
               </Text>
-              {selected ? <View style={styles.underline} /> : <View style={styles.underlinePlaceholder} />}
+              {selected ? (
+                <View style={styles.underline} />
+              ) : (
+                <View style={styles.underlinePlaceholder} />
+              )}
             </TouchableOpacity>
           );
         })}
-      </View> 
+      </View>
       <Modal
         visible={showLanguageSheet}
         transparent={true}

@@ -20,11 +20,18 @@ export type MatchCardProps = {
 const isLiveStatus = (match: Match): boolean =>
   match.status === 'live' || match.status === 'halftime';
 
+const formatKickoff = (ms: number): string =>
+  new Date(ms).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
 const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) => {
   const { colors } = useTheme();
   const {t} = useTranslation();
   const {openMatch} = useLanguageSpecificUrls();
   useMatchSubscription(isLiveStatus(match) ? match.id : []);
+
+  const isLive = isLiveStatus(match);
+  const isFinished = match.status === 'finished';
+  const isScheduled = match.status === 'scheduled';
 
   const score1Tokens = match.score.home.split(/\s+/);
   const score2Tokens = match.score.away.split(/\s+/);
@@ -36,8 +43,10 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
       onPress={openMatch}
       style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
       <View style={styles.headerRow}>
-        {isLiveStatus(match) ? (
+        {isLive ? (
           <StatusChip variant="live" label={t('ui.liveBadge')} />
+        ) : isFinished ? (
+          <StatusChip variant="period" label={t('match.finished').toUpperCase()} />
         ) : null}
         <Text
           variant="caption"
@@ -47,7 +56,7 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
           style={styles.comp}>
           {match.competition}
         </Text>
-        {status ? (
+        {isLive && status ? (
           <Text variant="caption" weight="bold" color={colors.accent}>
             {status}
           </Text>
@@ -75,30 +84,38 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
           </Text>
         </View>
 
-        <View style={styles.scoresCol}>
-          <View style={styles.scoreLine}>
-            {score1Tokens.map((tok, i) => (
-              <Text
-                key={`s1-${i}`}
-                weight="bold"
-                color={colors.textPrimary}
-                style={styles.scoreCell}>
-                {tok}
-              </Text>
-            ))}
+        {isScheduled ? (
+          <View style={styles.scoresCol}>
+            <Text weight="bold" color={colors.primary} style={styles.kickoff}>
+              {formatKickoff(match.startsAtMs)}
+            </Text>
           </View>
-          <View style={[styles.scoreLine, styles.scoreLineSecond]}>
-            {score2Tokens.map((tok, i) => (
-              <Text
-                key={`s2-${i}`}
-                weight="bold"
-                color={colors.textPrimary}
-                style={styles.scoreCell}>
-                {tok}
-              </Text>
-            ))}
+        ) : (
+          <View style={styles.scoresCol}>
+            <View style={styles.scoreLine}>
+              {score1Tokens.map((tok, i) => (
+                <Text
+                  key={`s1-${i}`}
+                  weight="bold"
+                  color={isFinished ? colors.textSecondary : colors.textPrimary}
+                  style={styles.scoreCell}>
+                  {tok}
+                </Text>
+              ))}
+            </View>
+            <View style={[styles.scoreLine, styles.scoreLineSecond]}>
+              {score2Tokens.map((tok, i) => (
+                <Text
+                  key={`s2-${i}`}
+                  weight="bold"
+                  color={isFinished ? colors.textSecondary : colors.textPrimary}
+                  style={styles.scoreCell}>
+                  {tok}
+                </Text>
+              ))}
+            </View>
           </View>
-        </View>
+        )}
 
         {/* {match.hasMedia ? ( */}
         <TouchableOpacity
@@ -170,6 +187,12 @@ const styles = StyleSheet.create({
     minWidth: 22,
     textAlign: 'center',
     marginLeft: 6,
+  },
+  kickoff: {
+    fontSize: 18,
+    lineHeight: 22,
+    textAlign: 'center',
+    minWidth: 60,
   },
   voirBtn: {
     width: 65,
