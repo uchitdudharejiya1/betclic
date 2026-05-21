@@ -1,4 +1,4 @@
-package com.betclic
+package com.betclic.pro
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

@@ -1,4 +1,4 @@
-package com.betclic
+package com.betclic.pro
 
 import android.app.Application
 import com.facebook.react.PackageList
