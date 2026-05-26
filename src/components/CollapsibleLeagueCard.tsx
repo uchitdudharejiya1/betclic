@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 
 import type {LeagueMatch} from '../constants/leagueMatches';
 import {useTheme} from '../hooks/useTheme';
-import {ExpandedMatchRow} from './ExpandedMatchRow';
+import {ExpandedMatchRowWithWatch} from './ExpandedMatchRowWithWatch';
 import {Text} from './Text';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -62,7 +62,7 @@ export const CollapsibleLeagueCard: React.FC<CollapsibleLeagueCardProps> = ({
       {expanded ? (
         <View style={[styles.body, {borderTopColor: colors.border}]}>
           {matches.map((m, i) => (
-            <ExpandedMatchRow key={i} match={m} isLast={i === matches.length - 1} />
+            <ExpandedMatchRowWithWatch key={i} match={m} isLast={i === matches.length - 1} />
           ))}
         </View>
       ) : null}

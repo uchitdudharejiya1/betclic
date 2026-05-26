@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Image, Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -8,6 +8,7 @@ import {useLanguage} from '../hooks/useLanguage';
 import {useTheme} from '../hooks/useTheme';
 import {Text} from './Text';
 import {useTranslation} from 'react-i18next';
+import { IMAGES } from '../assets';
 
 export type HeaderProps = {
   selectedDayKey: DayItem['key'];
@@ -35,11 +36,9 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <View style={[styles.container, {backgroundColor: colors.primary, paddingTop: insets.top}]}>
       <View style={styles.topRow}>
-        <View style={styles.logoPill}>
-          <Text variant="title" weight="black" color={colors.primary} style={styles.logoText}>
-            Betclic
-          </Text>
-        </View>
+        {/* <View style={styles.logoPill}> */}
+          <Image style={{width: 130, height: 44, borderRadius: 6}} source={require('../assets/images/logo.png')}  />
+        {/* </View> */}
 
         <View style={styles.actions}>
           <TouchableOpacity
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
   },
   logoPill: {
     backgroundColor: '#fff',
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 6,
   },

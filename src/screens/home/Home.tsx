@@ -42,7 +42,7 @@ export const Home: React.FC = () => {
   const {t} = useTranslation();
   const navigation = useNavigation<Nav>();
   const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>(todayKey());
-  const [selectedSport, setSelectedSport] = useState<SportId>('live');
+  const [selectedSport, setSelectedSport] = useState<SportId>('football');
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   const isToday = selectedDayKey === todayKey();
@@ -113,7 +113,7 @@ export const Home: React.FC = () => {
         showsHorizontalScrollIndicator={false}
         style={styles.railScroll}
         contentContainerStyle={styles.rail}>
-        {SPORTS.map(sport => (
+        {SPORTS.filter(s => s.id !== 'live').map(sport => (
           <Pill
             key={sport.id}
             icon={sport.id !== 'live' ? sport.icon : undefined}

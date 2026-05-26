@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as RNLocalize from 'react-native-localize';
 import React, {
   createContext,
   useCallback,
@@ -9,6 +10,7 @@ import React, {
 import i18n, {type Language} from '../Translation';
 
 const STORAGE_KEY = '@betclic/language';
+const FIRST_OPEN_KEY = '@betclic/first_open';
 
 export type LanguageContextValue = {
   currentLanguage: Language;
@@ -26,13 +28,39 @@ export const LanguageProvider: React.FC<{children: React.ReactNode}> = ({
   const [currentLanguage, setCurrentLanguage] = useState<Language>('fr');
 
   useEffect(() => {
-    AsyncStorage.getItem(STORAGE_KEY).then(stored => {
-      if (stored && ['fr', 'en', 'pl'].includes(stored as Language)) {
-        const language = stored as Language;
-        setCurrentLanguage(language);
-        i18n.changeLanguage(language);
+    const initializeLanguage = async () => {
+      try {
+        const storedLanguage = await AsyncStorage.getItem(STORAGE_KEY);
+        const isFirstOpen = await AsyncStorage.getItem(FIRST_OPEN_KEY);
+
+        if (storedLanguage && ['fr', 'pl'].includes(storedLanguage as Language)) {
+          // User has manually selected language before, use it
+          const language = storedLanguage as Language;
+          setCurrentLanguage(language);
+          i18n.changeLanguage(language);
+        } else if (!isFirstOpen) {
+          // First app open, detect country and set language accordingly
+          const country = RNLocalize.getCountry();
+          const detectedLanguage = country === 'PL' ? 'pl' : 'fr';
+          
+          setCurrentLanguage(detectedLanguage);
+          i18n.changeLanguage(detectedLanguage);
+          await AsyncStorage.setItem(STORAGE_KEY, detectedLanguage);
+          await AsyncStorage.setItem(FIRST_OPEN_KEY, 'true');
+        } else {
+          // Not first open but no stored language (shouldn't happen but fallback to French)
+          setCurrentLanguage('fr');
+          i18n.changeLanguage('fr');
+        }
+      } catch (error) {
+        console.error('Error initializing language:', error);
+        // Fallback to French
+        setCurrentLanguage('fr');
+        i18n.changeLanguage('fr');
       }
-    });
+    };
+
+    initializeLanguage();
   }, []);
 
   const changeLanguage = useCallback((language: Language) => {

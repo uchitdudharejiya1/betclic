@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTranslation} from 'react-i18next';
 
@@ -124,7 +124,8 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
             Linking.openURL('https://betclic.onelink.me/oTcP/10zx84uj')
           }}
           style={[styles.voirBtn, { borderColor: colors.primary }]}>
-          <MaterialCommunityIcons name="play-box-outline" size={22} color={colors.primary} />
+            <Image style={styles.tvIcon} source={require('../assets/images/tvIcon.png')} />
+          {/* <MaterialCommunityIcons name="play-box-outline" size={22} color={colors.primary} /> */}
           <Text variant="label" weight="bold" color={colors.primary} style={styles.voirLabel}>
             {t('match.watch')}
           </Text>
@@ -201,6 +202,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  tvIcon:{
+    width: 28,
+    height: 28,
   },
   voirLabel: { marginTop: 2, fontSize: 10, letterSpacing: 0.5 },
 });

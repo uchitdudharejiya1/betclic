@@ -14,6 +14,7 @@ import {useFixtures} from '../hooks/useFixtures';
 import {useTheme} from '../hooks/useTheme';
 import type {Match} from '../types/domain/match';
 import {Text} from './Text';
+import {useLanguageSpecificUrls} from '../utils/urlRedirection';
 
 export type CalendarProps = {
   onClose?: () => void;
@@ -30,6 +31,7 @@ export const CalendarComponent: React.FC<CalendarProps> = ({
   const {colors} = useTheme();
   const {t} = useTranslation();
   const {data, isLoading, error} = useFixtures(todayKey(), 'live');
+  const {openMatch} = useLanguageSpecificUrls();
 
   const upcoming = useMemo<Match[]>(() => {
     const now = Date.now();
@@ -83,7 +85,13 @@ export const CalendarComponent: React.FC<CalendarProps> = ({
             <TouchableOpacity
               key={match.id}
               activeOpacity={0.85}
-              onPress={() => onSelectMatch?.(match)}
+              onPress={() => {
+                if (onSelectMatch) {
+                  onSelectMatch(match);
+                } else {
+                  openMatch();
+                }
+              }}
               style={[
                 styles.row,
                 {backgroundColor: colors.cardAlt, borderColor: colors.border},
