@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {useTheme} from '../hooks/useTheme';
-import {useLanguageSpecificUrls} from '../utils/urlRedirection';
+import {useCountrySpecificUrls} from '../utils/urlRedirection';
 import {Text} from './Text';
 
 export type SportRowProps = {
@@ -15,7 +15,7 @@ export type SportRowProps = {
 
 export const SportRow: React.FC<SportRowProps> = ({icon, label, count, onPress}) => {
   const {colors} = useTheme();
-  const {openAllCompetitions} = useLanguageSpecificUrls();
+  const {openAllCompetitions} = useCountrySpecificUrls();
   
   const handlePress = () => {
     if (onPress) {

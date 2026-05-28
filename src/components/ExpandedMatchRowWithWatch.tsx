@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 
 import type {LeagueMatch} from '../constants/leagueMatches';
 import {useTheme} from '../hooks/useTheme';
-import {useLanguageSpecificUrls} from '../utils/urlRedirection';
+import {useCountrySpecificUrls} from '../utils/urlRedirection';
 import {Text} from './Text';
 
 export type ExpandedMatchRowWithWatchProps = {
@@ -18,7 +18,7 @@ export const ExpandedMatchRowWithWatch: React.FC<ExpandedMatchRowWithWatchProps>
 }) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const {openMatch} = useLanguageSpecificUrls();
+  const {openMatch} = useCountrySpecificUrls();
 
   let leftNode: React.ReactNode = null;
   if (match.status === 'live') {

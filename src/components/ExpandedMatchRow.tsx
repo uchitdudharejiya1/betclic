@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 
 import type {LeagueMatch} from '../constants/leagueMatches';
 import {useTheme} from '../hooks/useTheme';
-import {useLanguageSpecificUrls} from '../utils/urlRedirection';
+import {useCountrySpecificUrls} from '../utils/urlRedirection';
 import {Text} from './Text';
 
 export type ExpandedMatchRowProps = {
@@ -14,7 +14,7 @@ export type ExpandedMatchRowProps = {
 
 export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast}) => {
   const {colors} = useTheme();
-  const {openMatch} = useLanguageSpecificUrls();
+  const {openMatch} = useCountrySpecificUrls();
 
   let leftNode: React.ReactNode = null;
   if (match.status === 'live') {

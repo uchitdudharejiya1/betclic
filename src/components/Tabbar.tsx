@@ -7,7 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import {useTheme} from '../hooks/useTheme';
 import {useLiveMatches} from '../hooks/useLiveMatches';
-import {useLanguageSpecificUrls} from '../utils/urlRedirection';
+import {useCountrySpecificUrls} from '../utils/urlRedirection';
 import {BottomSheet} from './BottomSheet';
 import {Text} from './Text';
 
@@ -24,7 +24,7 @@ export const Tabbar: React.FC<BottomTabBarProps> = ({state, navigation}) => {
   const [seeAllOpen, setSeeAllOpen] = useState(false);
   const {data: liveAll} = useLiveMatches('live');
   const liveCount = liveAll?.length ?? 0;
-  const {openAllGames} = useLanguageSpecificUrls();
+  const {openAllGames} = useCountrySpecificUrls();
 
   const labels: Record<string, string> = {
     Sports: t('nav.sports'),

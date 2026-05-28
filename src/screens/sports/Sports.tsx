@@ -21,7 +21,7 @@ import {Header} from '../../components/Header';
 import {Pill} from '../../components/Pill';
 import {SportRow} from '../../components/SportRow';
 import {Text} from '../../components/Text';
-import {useLanguageSpecificUrls} from '../../utils/urlRedirection';
+import {useCountrySpecificUrls} from '../../utils/urlRedirection';
 import {SportKey, isSportAvailable} from '../../config/sports';
 import {todayKey, type DayItem} from '../../constants/days';
 import {SPORT_MENU} from '../../constants/sportMenu';
@@ -121,7 +121,7 @@ const ListContent: React.FC<{
 }> = ({date, onPickSport}) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const {openAllGames} = useLanguageSpecificUrls();
+  const {openAllGames} = useCountrySpecificUrls();
   const {data: allToday} = useFixtures(date, 'live');
   const leagueCountsBySport = useMemo(() => {
     if (!allToday) return new Map<string, number>();

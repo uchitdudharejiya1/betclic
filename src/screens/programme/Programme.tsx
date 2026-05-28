@@ -20,7 +20,7 @@ import {ScheduledMatchRow} from '../../components/ScheduledMatchRow';
 import {Text} from '../../components/Text';
 import {Button} from '../../components/Button';
 import {ENV} from '../../config/env';
-import {useLanguageSpecificUrls} from '../../utils/urlRedirection';
+import {useCountrySpecificUrls} from '../../utils/urlRedirection';
 import {todayKey, type DayItem} from '../../constants/days';
 import {SPORTS, type SportId} from '../../constants/sports';
 import {useFixtures} from '../../hooks/useFixtures';
@@ -79,7 +79,7 @@ export const Programme: React.FC = () => {
   const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>(todayKey());
   const [selectedSport, setSelectedSport] = useState<SportId>('football');
   const [calendarOpen, setCalendarOpen] = useState(false);
-  const {openAllGames} = useLanguageSpecificUrls();
+  const {openAllGames} = useCountrySpecificUrls();
   const {data, isLoading, error, refetch, isRefetching} = useFixtures(
     selectedDayKey,
     selectedSport,

@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 import { useMatchSubscription } from '../sockets/hooks/useMatchSubscription';
 import type { Match } from '../types/domain/match';
-import {useLanguageSpecificUrls} from '../utils/urlRedirection';
+import {useCountrySpecificUrls} from '../utils/urlRedirection';
 import { LiveOddsBadge } from './LiveOddsBadge';
 import { StatusChip } from './StatusChip';
 import { Text } from './Text';
@@ -26,7 +26,7 @@ const formatKickoff = (ms: number): string =>
 const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) => {
   const { colors } = useTheme();
   const {t} = useTranslation();
-  const {openMatch} = useLanguageSpecificUrls();
+  const {openMatch} = useCountrySpecificUrls();
   useMatchSubscription(isLiveStatus(match) ? match.id : []);
 
   const isLive = isLiveStatus(match);

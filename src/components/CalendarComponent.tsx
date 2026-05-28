@@ -14,7 +14,7 @@ import {useFixtures} from '../hooks/useFixtures';
 import {useTheme} from '../hooks/useTheme';
 import type {Match} from '../types/domain/match';
 import {Text} from './Text';
-import {useLanguageSpecificUrls} from '../utils/urlRedirection';
+import {useCountrySpecificUrls} from '../utils/urlRedirection';
 
 export type CalendarProps = {
   onClose?: () => void;
@@ -31,7 +31,7 @@ export const CalendarComponent: React.FC<CalendarProps> = ({
   const {colors} = useTheme();
   const {t} = useTranslation();
   const {data, isLoading, error} = useFixtures(todayKey(), 'live');
-  const {openMatch} = useLanguageSpecificUrls();
+  const {openMatch} = useCountrySpecificUrls();
 
   const upcoming = useMemo<Match[]>(() => {
     const now = Date.now();

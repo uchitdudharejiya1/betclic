@@ -1,42 +1,46 @@
 import { Linking } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import * as RNLocalize from 'react-native-localize';
 
-export const useLanguageSpecificUrls = () => {
-  const { i18n } = useTranslation();
-  
+export const useCountrySpecificUrls = () => {
   const urls = {
-    // Cote d'Ivoire URLs (French)
-    fr: {
-      allCompetitions: 'https://betclic.onelink.me/oTcP/2c0vftjs',
-      allGames: 'https://betclic.onelink.me/oTcP/k6mnkp5v',
-      match: 'https://betclic.onelink.me/oTcP/10zx84uj',
-    },
     // Poland URLs
-    pl: {
+    PL: {
       allCompetitions: 'https://go.onelink.me/ZeBi/34a85wej',
       allGames: 'https://go.onelink.me/ZeBi/nmajzfuc',
       match: 'https://go.onelink.me/ZeBi/pifnfe95',
     },
+    // Cameroon URLs
+    CM: {
+      allCompetitions: 'https://betclic.onelink.me/p26b/gziltbqw',
+      allGames: 'https://betclic.onelink.me/p26b/atz9jph4',
+      match: 'https://betclic.onelink.me/p26b/qz9vg3do',
+    },
+    // Côte d'Ivoire URLs
+    CI: {
+      allCompetitions: 'https://betclic.onelink.me/oTcP/2c0vftjs',
+      allGames: 'https://betclic.onelink.me/oTcP/k6mnkp5v',
+      match: 'https://betclic.onelink.me/oTcP/10zx84uj',
+    },
   };
 
-  const getCurrentLanguageUrls = () => {
-    const currentLang = i18n.language;
-    // Default to French URLs for any language that's not Polish
-    return urls[currentLang as keyof typeof urls] || urls.fr;
+  const getCurrentCountryUrls = () => {
+    const country = RNLocalize.getCountry();
+    // Default to Côte d'Ivoire URLs for any country that's not PL, CM, or CI
+    return urls[country as keyof typeof urls] || urls.CI;
   };
 
   const openAllCompetitions = () => {
-    const { allCompetitions } = getCurrentLanguageUrls();
+    const { allCompetitions } = getCurrentCountryUrls();
     Linking.openURL(allCompetitions);
   };
 
   const openAllGames = () => {
-    const { allGames } = getCurrentLanguageUrls();
+    const { allGames } = getCurrentCountryUrls();
     Linking.openURL(allGames);
   };
 
   const openMatch = () => {
-    const { match } = getCurrentLanguageUrls();
+    const { match } = getCurrentCountryUrls();
     Linking.openURL(match);
   };
 
@@ -44,6 +48,6 @@ export const useLanguageSpecificUrls = () => {
     openAllCompetitions,
     openAllGames,
     openMatch,
-    getCurrentLanguageUrls,
+    getCurrentCountryUrls,
   };
 };
