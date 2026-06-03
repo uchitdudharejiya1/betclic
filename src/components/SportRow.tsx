@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTranslation} from 'react-i18next';
 
 import {useTheme} from '../hooks/useTheme';
 import {useCountrySpecificUrls} from '../utils/urlRedirection';
@@ -15,6 +16,7 @@ export type SportRowProps = {
 
 export const SportRow: React.FC<SportRowProps> = ({icon, label, count, onPress}) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const {openAllCompetitions} = useCountrySpecificUrls();
   
   const handlePress = () => {
@@ -38,7 +40,7 @@ export const SportRow: React.FC<SportRowProps> = ({icon, label, count, onPress})
         {label}
       </Text>
       <Text variant="caption" color={colors.textMuted} style={styles.count}>
-        {count} compét.
+        {count} {t('ui.competitions')}
       </Text>
       <MaterialCommunityIcons name="chevron-right" size={22} color={colors.textMuted} />
     </TouchableOpacity>

@@ -45,6 +45,9 @@ type Section = {
     t2: string;
     time: string;
     status: Match['status'];
+    score1: string;
+    score2: string;
+    clock?: string;
   }>;
 };
 
@@ -63,6 +66,9 @@ const buildSections = (matches: Match[]): Section[] => {
       t2: m.away.name,
       time,
       status: m.status,
+      score1: m.score.home,
+      score2: m.score.away,
+      clock: m.clock,
     });
     map.set(key, entry);
   }
@@ -156,6 +162,9 @@ export const Programme: React.FC = () => {
             t2={item.t2}
             time={item.time}
             status={item.status}
+            score1={item.score1}
+            score2={item.score2}
+            clock={item.clock}
           />
         )}
         stickySectionHeadersEnabled={false}

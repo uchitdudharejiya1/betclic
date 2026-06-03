@@ -5,17 +5,21 @@ import type {
   RawBasketballLeagueListItem,
   RawBasketballOdds,
 } from '../../types/api/basketball';
+import {getTodayDate, transformToLiveResponse} from '../../utils/liveGamesHelper';
 
 const c = () => apiClient('basketball');
 
 export const basketballService = {
-  liveGames: (signal?: AbortSignal) =>
-    c()
+  liveGames: async (signal?: AbortSignal) => {
+    const response = await c()
       .get<ApiResponse<RawBasketballGame[]>>('/games', {
-        params: {live: 'all'},
+        params: {date: getTodayDate()},
         signal,
       })
-      .then(r => r.data),
+      .then(r => r.data);
+    
+    return transformToLiveResponse(response, 'basketball');
+  },
   gamesByDate: (date: string, signal?: AbortSignal) =>
     c()
       .get<ApiResponse<RawBasketballGame[]>>('/games', {

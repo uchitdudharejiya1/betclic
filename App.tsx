@@ -14,8 +14,8 @@ const ThemedStatusBar: React.FC = () => {
   return (
     <StatusBar
       barStyle="light-content"
-      backgroundColor={colors.primary}
-      translucent={false}
+      backgroundColor="transparent"
+      translucent={true}
     />
   );
 };

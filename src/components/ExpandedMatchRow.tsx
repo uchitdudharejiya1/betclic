@@ -14,6 +14,7 @@ export type ExpandedMatchRowProps = {
 
 export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast}) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const {openMatch} = useCountrySpecificUrls();
 
   let leftNode: React.ReactNode = null;
@@ -21,7 +22,7 @@ export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast
     leftNode = (
       <View style={styles.leftStack}>
         <Text variant="label" weight="bold" color={colors.primary}>
-          DIRECT
+          {t('match.live')}
         </Text>
         {(match.min || match.set) ? (
           <Text variant="label" weight="bold" color={colors.accent} style={styles.subStatus}>
@@ -39,7 +40,7 @@ export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast
   } else {
     leftNode = (
       <Text variant="label" weight="bold" color={colors.textMuted}>
-        TERMINÉ
+        {t('match.finished').toUpperCase()}
       </Text>
     );
   }

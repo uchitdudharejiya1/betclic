@@ -57,6 +57,7 @@
     "matchDetails": "Szczegóły meczu",
     "matchNumber": "Mecz #{{matchId}}",
     "match": "mecz",
-    "matches": "mecze"
+    "matches": "mecze",
+    "competitions": "Rozgrywki."
   }
 }

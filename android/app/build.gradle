@@ -88,8 +88,8 @@ android {
         applicationId "com.betclic.pro"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "1.0.4"
+        versionCode 5
+        versionName "1.0.5"
     }
     signingConfigs {
         debug {
@@ -117,11 +117,19 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    lint {
+        // Suppress deprecated API warnings from third-party libraries (React Native, Material)
+        // These will be fixed in future library updates
+        disable 'DeprecatedApi'
+    }
 }
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    
+    // AndroidX core for edge-to-edge support
+    implementation("androidx.core:core-ktx:1.15.0")
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

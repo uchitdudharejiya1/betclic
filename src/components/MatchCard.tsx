@@ -57,7 +57,7 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
           {match.competition}
         </Text>
         {isLive && status ? (
-          <Text variant="caption" weight="bold" color={colors.accent}>
+          <Text variant="body" weight="bold" color={colors.accent} style={styles.statusTime}>
             {status}
           </Text>
         ) : null}
@@ -208,4 +208,8 @@ const styles = StyleSheet.create({
     height: 28,
   },
   voirLabel: { marginTop: 2, fontSize: 10, letterSpacing: 0.5 },
+  statusTime: {
+    fontSize: 15,
+    lineHeight: 18,
+  },
 });

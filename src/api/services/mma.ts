@@ -1,6 +1,7 @@
 import {apiClient} from '../client/apiClient';
 import type {ApiResponse} from '../../types/api/common';
 import type {RawMmaFight} from '../../types/api/mma';
+import {getTodayDate, transformToLiveResponse} from '../../utils/liveGamesHelper';
 
 const c = () => apiClient('martial');
 
@@ -12,11 +13,14 @@ export const mmaService = {
         signal,
       })
       .then(r => r.data),
-  liveFights: (signal?: AbortSignal) =>
-    c()
+  liveFights: async (signal?: AbortSignal) => {
+    const response = await c()
       .get<ApiResponse<RawMmaFight[]>>('/fights', {
-        params: {live: 'all'},
+        params: {date: getTodayDate()},
         signal,
       })
-      .then(r => r.data),
+      .then(r => r.data);
+    
+    return transformToLiveResponse(response, 'mma');
+  },
 };

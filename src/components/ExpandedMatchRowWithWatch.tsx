@@ -25,7 +25,7 @@ export const ExpandedMatchRowWithWatch: React.FC<ExpandedMatchRowWithWatchProps>
     leftNode = (
       <View style={styles.leftStack}>
         <Text variant="label" weight="bold" color={colors.primary}>
-          DIRECT
+          {t('match.live')}
         </Text>
         {match.min || match.set ? (
           <Text variant="label" weight="bold" color={colors.accent} style={styles.subStatus}>
@@ -43,7 +43,7 @@ export const ExpandedMatchRowWithWatch: React.FC<ExpandedMatchRowWithWatchProps>
   } else {
     leftNode = (
       <Text variant="label" weight="bold" color={colors.textMuted}>
-        TERMINÉ
+        {t('match.finished').toUpperCase()}
       </Text>
     );
   }
