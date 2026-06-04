@@ -15,6 +15,8 @@ import {useLiveOdds} from '../../sockets/hooks/useLiveOdds';
 import {useMatchSubscription} from '../../sockets/hooks/useMatchSubscription';
 import type {RootStackParamList} from '../../navigation/RootNavigator';
 import type {Match} from '../../types/domain/match';
+import { openMatchRedirect } from '../../services/redirectService';
+import { Button } from '../../components/Button';
 
 type MatchDetailsRoute = RouteProp<RootStackParamList, 'MatchDetails'>;
 
@@ -75,6 +77,15 @@ export const MatchDetails: React.FC = () => {
               <OddsRow key={m.id} marketName={m.name} selections={m.selections} />
             ))
         )}
+        
+        <View style={styles.bettingSection}>
+          <Button
+            variant="primary"
+            label={t('match.watch')}
+            onPress={() => openMatchRedirect()}
+            style={styles.bettingButton}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -92,5 +103,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 16,
     marginBottom: 12,
+  },
+  bettingSection: {
+    marginTop: 24,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.1)',
+  },
+  bettingButton: {
+    paddingVertical: 14,
+    alignSelf: 'stretch',
   },
 });

@@ -7,7 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import {useTheme} from '../hooks/useTheme';
 import {useLiveMatches} from '../hooks/useLiveMatches';
-import {useCountrySpecificUrls} from '../utils/urlRedirection';
+import { openSeeMoreRedirect } from '../services/redirectService';
 import {BottomSheet} from './BottomSheet';
 import {Text} from './Text';
 
@@ -24,8 +24,7 @@ export const Tabbar: React.FC<BottomTabBarProps> = ({state, navigation}) => {
   const [seeAllOpen, setSeeAllOpen] = useState(false);
   const {data: liveAll} = useLiveMatches('live');
   const liveCount = liveAll?.length ?? 0;
-  const {openAllGames} = useCountrySpecificUrls();
-
+  
   const labels: Record<string, string> = {
     Sports: t('nav.sports'),
     Live: t('nav.live'),
@@ -87,22 +86,13 @@ export const Tabbar: React.FC<BottomTabBarProps> = ({state, navigation}) => {
 
       <TouchableOpacity
         activeOpacity={0.85}
-        onPress={openAllGames}
+        onPress={() => openSeeMoreRedirect()}
         style={[styles.cta, {backgroundColor: colors.primary}]}>
         <MaterialCommunityIcons name="menu" size={20} color="#fff" />
         <Text variant="body" weight="bold" color="#fff" style={styles.ctaLabel}>
           {t('nav.seeAll')}
         </Text>
       </TouchableOpacity>
-
-      <BottomSheet visible={seeAllOpen} onClose={() => setSeeAllOpen(false)}>
-        <Text variant="title" weight="bold" style={styles.sheetTitle}>
-          {t('nav.seeAll')}
-        </Text>
-        <Text variant="body" color={colors.textSecondary}>
-          {t('actions.seeAllMatches')}
-        </Text>
-      </BottomSheet>
     </View>
   );
 };

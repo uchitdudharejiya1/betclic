@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 
 import type {LeagueMatch} from '../constants/leagueMatches';
 import {useTheme} from '../hooks/useTheme';
-import {useCountrySpecificUrls} from '../utils/urlRedirection';
+import { openMatchRedirect } from '../services/redirectService';
 import {Text} from './Text';
 
 export type ExpandedMatchRowProps = {
@@ -15,8 +15,7 @@ export type ExpandedMatchRowProps = {
 export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast}) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const {openMatch} = useCountrySpecificUrls();
-
+  
   let leftNode: React.ReactNode = null;
   if (match.status === 'live') {
     leftNode = (
@@ -50,7 +49,7 @@ export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast
 
   return (
     <TouchableOpacity 
-    onPress={openMatch}
+    onPress={() => openMatchRedirect()}
     style={[styles.row, !isLast && {borderBottomColor: colors.border, borderBottomWidth: 1}]}>
       <View style={styles.left}>{leftNode}</View>
       <View style={styles.middle}>

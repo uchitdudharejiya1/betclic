@@ -1,6 +1,8 @@
 import React from 'react';
-import { Image, Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+
+import { openMatchRedirect } from '../services/redirectService';
 
 import { useTheme } from '../hooks/useTheme';
 import type { MatchStatus } from '../types/domain/match';
@@ -108,9 +110,7 @@ export const ScheduledMatchRow: React.FC<ScheduledMatchRowProps> = ({
 
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => {
-          Linking.openURL('https://betclic.onelink.me/oTcP/10zx84uj')
-        }}
+        onPress={() => openMatchRedirect()}
         style={[styles.tvButton, { borderColor: colors.primary }]}>
         <Image style={styles.tvIcon} source={require('../assets/images/tvIcon.png')} />
         <Text variant="label" weight="bold" color={colors.primary} style={styles.voirLabel}>

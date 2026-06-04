@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import { useTheme } from '../hooks/useTheme';
 import { useMatchSubscription } from '../sockets/hooks/useMatchSubscription';
 import type { Match } from '../types/domain/match';
-import {useCountrySpecificUrls} from '../utils/urlRedirection';
+import {openMatchRedirect} from '../services/redirectService';
 import { LiveOddsBadge } from './LiveOddsBadge';
 import { StatusChip } from './StatusChip';
 import { Text } from './Text';
@@ -26,8 +26,7 @@ const formatKickoff = (ms: number): string =>
 const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) => {
   const { colors } = useTheme();
   const {t} = useTranslation();
-  const {openMatch} = useCountrySpecificUrls();
-  useMatchSubscription(isLiveStatus(match) ? match.id : []);
+    useMatchSubscription(isLiveStatus(match) ? match.id : []);
 
   const isLive = isLiveStatus(match);
   const isFinished = match.status === 'finished';
@@ -40,7 +39,7 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
   return (
     <TouchableOpacity
       activeOpacity={onPress ? 0.85 : 1}
-      onPress={openMatch}
+      onPress={() => openMatchRedirect()}
       style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
       <View style={styles.headerRow}>
         {isLive ? (
@@ -120,9 +119,7 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
         {/* {match.hasMedia ? ( */}
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => {
-            Linking.openURL('https://betclic.onelink.me/oTcP/10zx84uj')
-          }}
+          onPress={() => openMatchRedirect()}
           style={[styles.voirBtn, { borderColor: colors.primary }]}>
             <Image style={styles.tvIcon} source={require('../assets/images/tvIcon.png')} />
           {/* <MaterialCommunityIcons name="play-box-outline" size={22} color={colors.primary} /> */}

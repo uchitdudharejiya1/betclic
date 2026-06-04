@@ -1,20 +1,23 @@
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 import {
   ActivityIndicator,
+  Image,
+  Linking,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {todayKey} from '../constants/days';
-import {useFixtures} from '../hooks/useFixtures';
-import {useTheme} from '../hooks/useTheme';
-import type {Match} from '../types/domain/match';
-import {Text} from './Text';
-import {useCountrySpecificUrls} from '../utils/urlRedirection';
+import { todayKey } from '../constants/days';
+import { useFixtures } from '../hooks/useFixtures';
+import { useLanguage } from '../hooks/useLanguage';
+import { useTheme } from '../hooks/useTheme';
+import type { Match } from '../types/domain/match';
+import { Text } from './Text';
+import { openMatchRedirect } from '../services/redirectService';
 
 export type CalendarProps = {
   onClose?: () => void;
@@ -22,16 +25,16 @@ export type CalendarProps = {
 };
 
 const formatTime = (ms: number): string =>
-  new Date(ms).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+  new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
 export const CalendarComponent: React.FC<CalendarProps> = ({
   onClose,
   onSelectMatch,
 }) => {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
-  const {data, isLoading, error} = useFixtures(todayKey(), 'live');
-  const {openMatch} = useCountrySpecificUrls();
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const { data, isLoading, error } = useFixtures(todayKey(), 'live');
+    const { currentLanguage } = useLanguage();
 
   const upcoming = useMemo<Match[]>(() => {
     const now = Date.now();
@@ -39,7 +42,7 @@ export const CalendarComponent: React.FC<CalendarProps> = ({
       .filter(m => m.startsAtMs > now)
       .sort((a, b) => a.startsAtMs - b.startsAtMs)
       .slice(0, 30);
-  }, [data]);
+  }, [data, currentLanguage]);
 
   return (
     <View style={styles.container}>
@@ -89,12 +92,12 @@ export const CalendarComponent: React.FC<CalendarProps> = ({
                 if (onSelectMatch) {
                   onSelectMatch(match);
                 } else {
-                  openMatch();
+                  openMatchRedirect();
                 }
               }}
               style={[
                 styles.row,
-                {backgroundColor: colors.cardAlt, borderColor: colors.border},
+                { backgroundColor: colors.cardAlt, borderColor: colors.border },
               ]}>
               <Text
                 variant="body"
@@ -123,6 +126,15 @@ export const CalendarComponent: React.FC<CalendarProps> = ({
                   </Text>
                 </Text>
               </View>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => openMatchRedirect()}
+                style={[styles.tvButton, { borderColor: colors.primary }]}>
+                <Image style={styles.tvIcon} source={require('../assets/images/tvIcon.png')} />
+                <Text variant="label" weight="bold" color={colors.primary} style={styles.voirLabel}>
+                  {t('match.watch')}
+                </Text>
+              </TouchableOpacity>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -139,12 +151,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingBottom: 14,
   },
-  titleRow: {flexDirection: 'row', alignItems: 'center'},
-  titleEmoji: {marginRight: 8, fontSize: 22, lineHeight: 26},
-  closeBtn: {padding: 4},
+  titleRow: { flexDirection: 'row', alignItems: 'center' },
+  titleEmoji: { marginRight: 8, fontSize: 22, lineHeight: 26 },
+  closeBtn: { padding: 4 },
   list: {},
-  listContent: {paddingBottom: 16},
-  state: {paddingVertical: 32, alignItems: 'center', justifyContent: 'center'},
+  listContent: { paddingBottom: 16 },
+  state: { paddingVertical: 32, alignItems: 'center', justifyContent: 'center' },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -154,7 +166,34 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 8,
   },
-  time: {fontSize: 16, lineHeight: 20, minWidth: 64, marginRight: 8},
-  info: {flex: 1},
-  comp: {marginBottom: 4},
+  time: { fontSize: 16, lineHeight: 20, minWidth: 64, marginRight: 8 },
+  info: { flex: 1 },
+  comp: { marginBottom: 4 },
+  tvIconContainer: {
+    width: 70,
+    height: 60,
+    borderRadius: 6,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 8,
+  },
+  tvIconText: {
+    marginTop: 2,
+    fontSize: 10,
+  },
+  tvButton: {
+    width: 55,
+    height: 46,
+    borderWidth: 1,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 10
+  },
+  tvIcon: {
+    width: 22,
+    height: 22,
+  },
+  voirLabel: { marginTop: 2, fontSize: 8, letterSpacing: 0.5 },
 });

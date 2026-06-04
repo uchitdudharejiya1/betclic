@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 
 import type {LeagueMatch} from '../constants/leagueMatches';
 import {useTheme} from '../hooks/useTheme';
-import {useCountrySpecificUrls} from '../utils/urlRedirection';
+import { openMatchRedirect } from '../services/redirectService';
 import {Text} from './Text';
 
 export type ExpandedMatchRowWithWatchProps = {
@@ -18,8 +18,7 @@ export const ExpandedMatchRowWithWatch: React.FC<ExpandedMatchRowWithWatchProps>
 }) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const {openMatch} = useCountrySpecificUrls();
-
+  
   let leftNode: React.ReactNode = null;
   if (match.status === 'live') {
     leftNode = (
@@ -53,7 +52,7 @@ export const ExpandedMatchRowWithWatch: React.FC<ExpandedMatchRowWithWatchProps>
 
   return (
     <TouchableOpacity
-      onPress={openMatch}
+      onPress={() => openMatchRedirect()}
       style={[styles.row, !isLast && {borderBottomColor: colors.border, borderBottomWidth: 1}]}> 
       <View style={styles.left}>{leftNode}</View>
       <View style={styles.middle}>
@@ -77,9 +76,7 @@ export const ExpandedMatchRowWithWatch: React.FC<ExpandedMatchRowWithWatchProps>
         ) : null}
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => {
-            Linking.openURL('https://betclic.onelink.me/oTcP/10zx84uj');
-          }}
+          onPress={() => openMatchRedirect()}
           style={[styles.voirBtn, {borderColor: colors.primary}]}
         >
           <Image style={styles.tvIcon} source={require('../assets/images/tvIcon.png')} />

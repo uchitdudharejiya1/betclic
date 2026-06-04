@@ -21,7 +21,7 @@ import {Header} from '../../components/Header';
 import {Pill} from '../../components/Pill';
 import {SportRow} from '../../components/SportRow';
 import {Text} from '../../components/Text';
-import {useCountrySpecificUrls} from '../../utils/urlRedirection';
+import { openSeeAllMatchesRedirect } from '../../services/redirectService';
 import {SportKey, isSportAvailable} from '../../config/sports';
 import {todayKey, type DayItem} from '../../constants/days';
 import {SPORT_MENU} from '../../constants/sportMenu';
@@ -121,8 +121,7 @@ const ListContent: React.FC<{
 }> = ({date, onPickSport}) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const {openAllGames} = useCountrySpecificUrls();
-  const {data: allToday} = useFixtures(date, 'live');
+    const {data: allToday} = useFixtures(date, 'live');
   const leagueCountsBySport = useMemo(() => {
     if (!allToday) return new Map<string, number>();
     const perSport = new Map<string, Set<string>>();
@@ -155,7 +154,7 @@ const ListContent: React.FC<{
         variant="primary"
         label={t('actions.seeAllMatches')}
         style={styles.cta}
-        onPress={openAllGames}
+        onPress={() => openSeeAllMatchesRedirect()}
       />
     </ScrollView>
   );

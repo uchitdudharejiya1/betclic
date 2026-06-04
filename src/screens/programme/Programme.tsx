@@ -20,7 +20,7 @@ import {ScheduledMatchRow} from '../../components/ScheduledMatchRow';
 import {Text} from '../../components/Text';
 import {Button} from '../../components/Button';
 import {ENV} from '../../config/env';
-import {useCountrySpecificUrls} from '../../utils/urlRedirection';
+import { openSeeAllMatchesRedirect } from '../../services/redirectService';
 import {todayKey, type DayItem} from '../../constants/days';
 import {SPORTS, type SportId} from '../../constants/sports';
 import {useFixtures} from '../../hooks/useFixtures';
@@ -85,8 +85,7 @@ export const Programme: React.FC = () => {
   const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>(todayKey());
   const [selectedSport, setSelectedSport] = useState<SportId>('football');
   const [calendarOpen, setCalendarOpen] = useState(false);
-  const {openAllGames} = useCountrySpecificUrls();
-  const {data, isLoading, error, refetch, isRefetching} = useFixtures(
+    const {data, isLoading, error, refetch, isRefetching} = useFixtures(
     selectedDayKey,
     selectedSport,
   );
@@ -94,8 +93,8 @@ export const Programme: React.FC = () => {
   const sections = useMemo(() => buildSections(limited), [limited]);
 
   const openAll = useCallback(() => {
-    openAllGames();
-  }, [openAllGames]);
+    openSeeAllMatchesRedirect();
+  }, []);
 
   return (
     <SafeAreaView edges={['bottom']} style={[styles.safe, {backgroundColor: colors.bg}]}>
@@ -179,7 +178,7 @@ export const Programme: React.FC = () => {
           <Button
             variant="primary"
             label={t('actions.seeAllMatches')}
-            onPress={openAllGames}
+            onPress={openAll}
             style={{paddingVertical: 14, alignSelf: 'stretch', marginTop: 12}}
           />
         }

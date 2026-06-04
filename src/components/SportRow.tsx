@@ -4,7 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {useTranslation} from 'react-i18next';
 
 import {useTheme} from '../hooks/useTheme';
-import {useCountrySpecificUrls} from '../utils/urlRedirection';
+import { openSeeAllMatchesRedirect } from '../services/redirectService';
 import {Text} from './Text';
 
 export type SportRowProps = {
@@ -17,13 +17,11 @@ export type SportRowProps = {
 export const SportRow: React.FC<SportRowProps> = ({icon, label, count, onPress}) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const {openAllCompetitions} = useCountrySpecificUrls();
-  
   const handlePress = () => {
     if (onPress) {
       onPress();
     } else {
-      openAllCompetitions();
+      openSeeAllMatchesRedirect();
     }
   };
   return (
@@ -40,7 +38,8 @@ export const SportRow: React.FC<SportRowProps> = ({icon, label, count, onPress})
         {label}
       </Text>
       <Text variant="caption" color={colors.textMuted} style={styles.count}>
-        {count} {t('ui.competitions')}
+        {count} 
+        {/* {t('ui.competitions')} */}
       </Text>
       <MaterialCommunityIcons name="chevron-right" size={22} color={colors.textMuted} />
     </TouchableOpacity>

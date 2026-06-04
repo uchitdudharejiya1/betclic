@@ -105,9 +105,9 @@ export const Header: React.FC<HeaderProps> = ({
         transparent={true}
         animationType="fade"
         onRequestClose={() => setShowLanguageSheet(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text variant="title" weight="semibold" style={styles.modalTitle}>
+        <View style={[styles.modalOverlay, {backgroundColor: 'rgba(0, 0, 0, 0.5)'}]}>
+          <View style={[styles.modalContent, {backgroundColor: colors.card, borderColor: colors.border}]}>
+            <Text variant="title" weight="semibold" style={[styles.modalTitle, {color: colors.textPrimary}]}>
               {t('header.selectLanguage')}
             </Text>
             <View style={styles.languageList}>
@@ -116,7 +116,8 @@ export const Header: React.FC<HeaderProps> = ({
                   key={language.code}
                   style={[
                     styles.languageItem,
-                    currentLanguage === language.code && styles.languageItemSelected,
+                    {backgroundColor: colors.cardAlt, borderColor: colors.border},
+                    currentLanguage === language.code && [styles.languageItemSelected, {backgroundColor: colors.primary + '20', borderColor: colors.primary}],
                   ]}
                   onPress={() => {
                     changeLanguage(language.code as any);
@@ -126,20 +127,21 @@ export const Header: React.FC<HeaderProps> = ({
                   <Text
                     style={[
                       styles.languageName,
-                      currentLanguage === language.code && styles.languageNameSelected,
+                      {color: colors.textPrimary},
+                      currentLanguage === language.code && [styles.languageNameSelected, {color: colors.primary}],
                     ]}>
                     {language.name}
                   </Text>
                   {currentLanguage === language.code && (
-                    <Ionicons name="checkmark" size={20} color="#007AFF" />
+                    <Ionicons name="checkmark" size={20} color={colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
             </View>
             <TouchableOpacity
-              style={styles.closeButton}
+              style={[styles.closeButton, {backgroundColor: colors.cardAlt}]}
               onPress={() => setShowLanguageSheet(false)}>
-              <Ionicons name="close" size={24} color="#666" />
+              <Ionicons name="close" size={24} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
         </View>
