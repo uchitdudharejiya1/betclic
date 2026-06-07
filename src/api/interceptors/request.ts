@@ -16,10 +16,23 @@ declare module 'axios' {
 
 export const installRequestInterceptor = (
   client: AxiosInstance,
-  _host: string,
+  host: string,
 ): void => {
   client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-    config.headers.set('x-apisports-key', ENV.APISPORTS_KEY);
+    // Handle The Odds API differently
+    if (host === 'api.the-odds-api.com') {
+      // The Odds API uses apiKey parameter instead of header
+      if (ENV.THE_ODDS_API_KEY) {
+        config.params = {
+          ...config.params,
+          apiKey: ENV.THE_ODDS_API_KEY,
+        };
+      }
+    } else {
+      // API Sports uses header
+      config.headers.set('x-apisports-key', ENV.APISPORTS_KEY);
+    }
+    
     if (!config.headers.has('Accept')) {
       config.headers.set('Accept', 'application/json');
     }

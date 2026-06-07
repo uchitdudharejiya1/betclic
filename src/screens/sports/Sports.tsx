@@ -1,8 +1,9 @@
+import {useNavigation} from '@react-navigation/native';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useQuery} from '@tanstack/react-query';
 import React, {useMemo, useState} from 'react';
 import {
   ActivityIndicator,
-  Linking,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -30,6 +31,7 @@ import type {LeagueMatch, LeagueMatchStatus} from '../../constants/leagueMatches
 import {useFixtures} from '../../hooks/useFixtures';
 import {useTheme} from '../../hooks/useTheme';
 import type {Match, MatchStatus} from '../../types/domain/match';
+import type {RootStackParamList} from '../../navigation/RootNavigator';
 
 type DetailSport = Exclude<SportId, 'live'>;
 
@@ -61,6 +63,7 @@ const matchToLeagueRow = (m: Match): LeagueMatch => ({
 export const Sports: React.FC = () => {
   const {colors} = useTheme();
   const {t} = useTranslation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>(todayKey());
   const [selectedSport, setSelectedSport] = useState<SportId>('football');
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -72,6 +75,7 @@ export const Sports: React.FC = () => {
     enabled: false,
   });
 
+  
   return (
     <SafeAreaView edges={['bottom']} style={[styles.safe, {backgroundColor: colors.bg}]}>
       <Header
@@ -105,7 +109,10 @@ export const Sports: React.FC = () => {
           onBack={() => setDetailSport(null)}
         />
       ) : (
-        <ListContent date={selectedDayKey} onPickSport={setDetailSport} />
+        <ListContent 
+          date={selectedDayKey} 
+          onPickSport={setDetailSport}
+        />
       )}
 
       <BottomSheet visible={calendarOpen} onClose={() => setCalendarOpen(false)}>
@@ -170,7 +177,11 @@ const DetailContent: React.FC<{
   const sportKey = sportId as SportKey;
   const available = isSportAvailable(sportKey);
   const {data, isLoading, error} = useFixtures(date, sportId);
-
+  
+  // Temporarily force tennis to be available for debugging
+  const forceAvailable = sportId === 'tennis' ? true : available;
+  
+  
   const grouped = useMemo(() => {
     if (!data) return [] as {league: string; matches: LeagueMatch[]}[];
     const map = new Map<string, LeagueMatch[]>();
@@ -197,7 +208,7 @@ const DetailContent: React.FC<{
       </View>
 
       <ScrollView contentContainerStyle={styles.detailList}>
-        {!available ? (
+        {!forceAvailable ? (
           <Text variant="body" color={colors.textMuted} align="center" style={styles.notice}>
             {t('errors.providerNotConfigured', {sport: sportId})}
           </Text>

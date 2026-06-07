@@ -5,7 +5,9 @@ import type {
 } from '../../types/api/basketball';
 import type {RawFootballFixture} from '../../types/api/football';
 import type {RawMmaFight} from '../../types/api/mma';
+import type {RawTennisEvent, RawTennisScore} from '../../types/api/tennis';
 import type {Match, MatchStatus} from '../../types/domain/match';
+import {hasValidTennisScore, extractTennisScores} from '../../api/services/tennis';
 
 const FOOTBALL_LIVE_SHORT = new Set([
   '1H',
@@ -137,3 +139,50 @@ export const mapMmaFightToMatch = (f: RawMmaFight): Match => ({
   startsAtMs: f.timestamp * 1000,
   hasMedia: false,
 });
+
+const mapTennisStatus = (completed: boolean, commenceTime: string): MatchStatus => {
+  const now = new Date();
+  const startTime = new Date(commenceTime);
+  
+  if (completed) return 'finished';
+  if (startTime <= now) return 'live';
+  return 'scheduled';
+};
+
+export const mapTennisEventToMatch = (event: RawTennisEvent): Match => {
+  const {home: homeScore, away: awayScore} = extractTennisScores(event);
+  const hasValidScore = hasValidTennisScore(event);
+  
+  return {
+    id: event.id,
+    sport: 'tennis',
+    competition: event.sport_title,
+    league: {id: event.sport_key, name: event.sport_title, logo: null},
+    home: {id: `home-${event.id}`, name: event.home_team, logo: null},
+    away: {id: `away-${event.id}`, name: event.away_team, logo: null},
+    score: {home: homeScore, away: awayScore},
+    status: mapTennisStatus(event.completed, event.commence_time),
+    clock: !hasValidScore && mapTennisStatus(event.completed, event.commence_time) === 'live' ? 'Live score unavailable' : undefined,
+    startsAtMs: new Date(event.commence_time).getTime(),
+    hasMedia: false,
+  };
+};
+
+export const mapTennisScoreToMatch = (score: RawTennisScore): Match => {
+  const {home: homeScore, away: awayScore} = extractTennisScores(score);
+  const hasValidScore = hasValidTennisScore(score);
+  
+  return {
+    id: score.id,
+    sport: 'tennis',
+    competition: score.sport_title,
+    league: {id: score.sport_key, name: score.sport_title, logo: null},
+    home: {id: `home-${score.id}`, name: score.home_team, logo: null},
+    away: {id: `away-${score.id}`, name: score.away_team, logo: null},
+    score: {home: homeScore, away: awayScore},
+    status: mapTennisStatus(score.completed, score.commence_time),
+    clock: !hasValidScore && mapTennisStatus(score.completed, score.commence_time) === 'live' ? 'Live score unavailable' : undefined,
+    startsAtMs: new Date(score.commence_time).getTime(),
+    hasMedia: false,
+  };
+};
