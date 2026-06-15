@@ -28,6 +28,7 @@ import {todayKey, type DayItem} from '../../constants/days';
 import {SPORT_MENU} from '../../constants/sportMenu';
 import {SPORTS, type SportId} from '../../constants/sports';
 import type {LeagueMatch, LeagueMatchStatus} from '../../constants/leagueMatches';
+import {useCountry} from '../../hooks/useCountry';
 import {useFixtures} from '../../hooks/useFixtures';
 import {useTheme} from '../../hooks/useTheme';
 import type {Match, MatchStatus} from '../../types/domain/match';
@@ -38,7 +39,6 @@ type DetailSport = Exclude<SportId, 'live'>;
 const SPORT_EMOJI: Record<string, string> = {
   football: '⚽',
   basketball: '🏀',
-  tennis: '🎾',
   volleyball: '🏐',
   hockey: '🏒',
   martial: '🥊',
@@ -62,6 +62,7 @@ const matchToLeagueRow = (m: Match): LeagueMatch => ({
 
 export const Sports: React.FC = () => {
   const {colors} = useTheme();
+  const {currentCountry} = useCountry();
   const {t} = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [selectedDayKey, setSelectedDayKey] = useState<DayItem['key']>(todayKey());
@@ -127,6 +128,7 @@ const ListContent: React.FC<{
   onPickSport: (id: DetailSport) => void;
 }> = ({date, onPickSport}) => {
   const {colors} = useTheme();
+  const {currentCountry} = useCountry();
   const {t} = useTranslation();
     const {data: allToday} = useFixtures(date, 'live');
   const leagueCountsBySport = useMemo(() => {
@@ -161,7 +163,7 @@ const ListContent: React.FC<{
         variant="primary"
         label={t('actions.seeAllMatches')}
         style={styles.cta}
-        onPress={() => openSeeAllMatchesRedirect()}
+        onPress={() => openSeeAllMatchesRedirect(currentCountry)}
       />
     </ScrollView>
   );
@@ -177,10 +179,6 @@ const DetailContent: React.FC<{
   const sportKey = sportId as SportKey;
   const available = isSportAvailable(sportKey);
   const {data, isLoading, error} = useFixtures(date, sportId);
-  
-  // Temporarily force tennis to be available for debugging
-  const forceAvailable = sportId === 'tennis' ? true : available;
-  
   
   const grouped = useMemo(() => {
     if (!data) return [] as {league: string; matches: LeagueMatch[]}[];
@@ -208,7 +206,7 @@ const DetailContent: React.FC<{
       </View>
 
       <ScrollView contentContainerStyle={styles.detailList}>
-        {!forceAvailable ? (
+        {!available ? (
           <Text variant="body" color={colors.textMuted} align="center" style={styles.notice}>
             {t('errors.providerNotConfigured', {sport: sportId})}
           </Text>

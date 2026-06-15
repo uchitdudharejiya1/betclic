@@ -13,6 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { todayKey } from '../constants/days';
 import { useFixtures } from '../hooks/useFixtures';
+import { useCountry } from '../hooks/useCountry';
 import { useLanguage } from '../hooks/useLanguage';
 import { useTheme } from '../hooks/useTheme';
 import type { Match } from '../types/domain/match';
@@ -33,6 +34,7 @@ export const CalendarComponent: React.FC<CalendarProps> = ({
 }) => {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const { currentCountry } = useCountry();
   const { data, isLoading, error } = useFixtures(todayKey(), 'live');
     const { currentLanguage } = useLanguage();
 
@@ -92,7 +94,7 @@ export const CalendarComponent: React.FC<CalendarProps> = ({
                 if (onSelectMatch) {
                   onSelectMatch(match);
                 } else {
-                  openMatchRedirect();
+                  openMatchRedirect(currentCountry);
                 }
               }}
               style={[
@@ -128,7 +130,7 @@ export const CalendarComponent: React.FC<CalendarProps> = ({
               </View>
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => openMatchRedirect()}
+                onPress={() => openMatchRedirect(currentCountry)}
                 style={[styles.tvButton, { borderColor: colors.primary }]}>
                 <Image style={styles.tvIcon} source={require('../assets/images/tvIcon.png')} />
                 <Text variant="label" weight="bold" color={colors.primary} style={styles.voirLabel}>

@@ -23,7 +23,8 @@ class MainActivity : ReactActivity() {
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+    // Pass null to prevent state restoration which causes react-native-screens crash
+    super.onCreate(null)
     WindowCompat.setDecorFitsSystemWindows(window, false)
   }
 }

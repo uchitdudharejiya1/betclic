@@ -41,11 +41,6 @@ export const SPORT_HOSTS: Record<SportKey, SportHostConfig> = {
     host: 'v1.mma.api-sports.io',
     available: true,
   },
-  tennis: {
-    baseURL: 'https://api.the-odds-api.com/v4',
-    host: 'api.the-odds-api.com',
-    available: true,
-  },
 };
 
 export const isSportAvailable = (sport: SportKey): boolean =>

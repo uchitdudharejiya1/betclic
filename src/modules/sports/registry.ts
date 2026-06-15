@@ -19,7 +19,6 @@ const REGISTRY: Record<SportKey, SportAdapter> = {
   hockey: buildAdapter('hockey'),
   volleyball: buildAdapter('volleyball'),
   martial: buildAdapter('martial'),
-  tennis: buildAdapter('tennis'),
 };
 
 export const sportRegistry = REGISTRY;

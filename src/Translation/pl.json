@@ -10,7 +10,8 @@
     "calendar": "Terminarz",
     "themeDay": "Tryb dzienny włączony",
     "themeNight": "Tryb nocny włączony",
-    "selectLanguage": "Wybierz język"
+    "selectLanguage": "Wybierz język",
+    "selectCountry": "Wybierz kraj"
   },
   "days": {
     "mon": "Pon",
@@ -59,5 +60,8 @@
     "match": "mecz",
     "matches": "mecze",
     "competitions": "Rozgrywki."
+  },
+  "banner": {
+    "title": "Oglądaj wszystkie mecze Mistrzostw Świata w Piłce Nożnej"
   }
 }

@@ -9,7 +9,9 @@
   "header": {
     "calendar": "Calendar",
     "themeDay": "Day mode enabled",
-    "themeNight": "Night mode enabled"
+    "themeNight": "Night mode enabled",
+    "selectLanguage": "Select language",
+    "selectCountry": "Select country"
   },
   "days": {
     "mon": "Mon",

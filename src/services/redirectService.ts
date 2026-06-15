@@ -8,23 +8,26 @@ const COUNTRY_URLS = {
     match: 'https://betclic.onelink.me/oTcP/10zx84uj',
     seeAllMatches: 'https://betclic.onelink.me/oTcP/2c0vftjs',
     seeMore: 'https://betclic.onelink.me/oTcP/k6mnkp5v',
+    banner: 'https://betclic.onelink.me/oTcP/4qvicar1',
   },
   // Cameroun (CM)
   CM: {
     match: 'https://betclic.onelink.me/p26b/qz9vg3do',
     seeAllMatches: 'https://betclic.onelink.me/p26b/gziltbqw',
     seeMore: 'https://betclic.onelink.me/p26b/atz9jph4',
+    banner: 'https://betclic.onelink.me/p26b/qetfgfri',
   },
   // Poland (PL)
   PL: {
     match: 'https://go.onelink.me/ZeBi/pifnfe95',
     seeAllMatches: 'https://go.onelink.me/ZeBi/34a85wej',
     seeMore: 'https://go.onelink.me/ZeBi/nmajzfuc',
+    banner: 'https://betclic.onelink.me/ZeBi/n9qjkv5g',
   },
 } as const;
 
 export type CountryCode = keyof typeof COUNTRY_URLS;
-export type RedirectType = 'match' | 'seeAllMatches' | 'seeMore';
+export type RedirectType = 'match' | 'seeAllMatches' | 'seeMore' | 'banner';
 
 /**
  * Get current country code based on device locale
@@ -67,6 +70,14 @@ export const getSeeMoreRedirect = (countryCode?: CountryCode): string => {
 };
 
 /**
+ * Get Banner redirect URL for current country
+ */
+export const getBannerRedirect = (countryCode?: CountryCode): string => {
+  const country = countryCode || getCurrentCountry();
+  return getRedirectUrl(country, 'banner');
+};
+
+/**
  * Open match betting URL for current country
  */
 export const openMatchRedirect = async (countryCode?: CountryCode): Promise<void> => {
@@ -93,6 +104,16 @@ export const openSeeMoreRedirect = async (countryCode?: CountryCode): Promise<vo
   const country = countryCode || getCurrentCountry();
   const url = getSeeMoreRedirect(country);
   console.log(`🔥 SEE MORE REDIRECT - Country: ${country}, URL: ${url}`);
+  await Linking.openURL(url);
+};
+
+/**
+ * Open Banner betting URL for current country
+ */
+export const openBannerRedirect = async (countryCode?: CountryCode): Promise<void> => {
+  const country = countryCode || getCurrentCountry();
+  const url = getBannerRedirect(country);
+  console.log(`🏆 BANNER REDIRECT - Country: ${country}, URL: ${url}`);
   await Linking.openURL(url);
 };
 

@@ -24,6 +24,11 @@ export type Match = {
   score: MatchScore;
   status: MatchStatus;
   clock?: string;
+  roundInfo?: {
+    current: number;
+    total: number;
+    time?: string;
+  };
   startsAtMs: number;
   hasMedia: boolean;
 };

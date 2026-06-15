@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { openMatchRedirect } from '../services/redirectService';
 
+import { useCountry } from '../hooks/useCountry';
 import { useTheme } from '../hooks/useTheme';
 import type { MatchStatus } from '../types/domain/match';
 import { Text } from './Text';
@@ -28,6 +29,7 @@ export const ScheduledMatchRow: React.FC<ScheduledMatchRowProps> = ({
   clock,
 }) => {
   const { colors } = useTheme();
+  const { currentCountry } = useCountry();
   const { t } = useTranslation();
   const isFinished = status === 'finished';
   const isLive = status === 'live' || status === 'halftime';
@@ -110,7 +112,7 @@ export const ScheduledMatchRow: React.FC<ScheduledMatchRowProps> = ({
 
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => openMatchRedirect()}
+        onPress={() => openMatchRedirect(currentCountry)}
         style={[styles.tvButton, { borderColor: colors.primary }]}>
         <Image style={styles.tvIcon} source={require('../assets/images/tvIcon.png')} />
         <Text variant="label" weight="bold" color={colors.primary} style={styles.voirLabel}>

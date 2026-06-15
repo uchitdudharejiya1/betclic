@@ -4,6 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {useTranslation} from 'react-i18next';
 
 import { useTheme } from '../hooks/useTheme';
+import { useCountry } from '../hooks/useCountry';
 import { useMatchSubscription } from '../sockets/hooks/useMatchSubscription';
 import type { Match } from '../types/domain/match';
 import {openMatchRedirect} from '../services/redirectService';
@@ -26,6 +27,7 @@ const formatKickoff = (ms: number): string =>
 const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) => {
   const { colors } = useTheme();
   const {t} = useTranslation();
+  const { currentCountry } = useCountry();
     useMatchSubscription(isLiveStatus(match) ? match.id : []);
 
   const isLive = isLiveStatus(match);
@@ -39,7 +41,7 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
   return (
     <TouchableOpacity
       activeOpacity={onPress ? 0.85 : 1}
-      onPress={() => openMatchRedirect()}
+      onPress={() => openMatchRedirect(currentCountry)}
       style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
       <View style={styles.headerRow}>
         {isLive ? (
@@ -57,7 +59,9 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
         </Text>
         {isLive && status ? (
           <Text variant="body" weight="bold" color={colors.accent} style={styles.statusTime}>
-            {status}
+            {match.sport === 'martial' && match.roundInfo 
+              ? `Round ${match.roundInfo.current}`
+              : status}
           </Text>
         ) : null}
       </View>
@@ -119,7 +123,7 @@ const MatchCardImpl: React.FC<MatchCardProps> = ({ match, onPress, onWatch }) =>
         {/* {match.hasMedia ? ( */}
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => openMatchRedirect()}
+          onPress={() => openMatchRedirect(currentCountry)}
           style={[styles.voirBtn, { borderColor: colors.primary }]}>
             <Image style={styles.tvIcon} source={require('../assets/images/tvIcon.png')} />
           {/* <MaterialCommunityIcons name="play-box-outline" size={22} color={colors.primary} /> */}

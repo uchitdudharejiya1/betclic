@@ -9,6 +9,7 @@ import {MatchStatsPanel} from '../../components/MatchStatsPanel';
 import {OddsRow} from '../../components/OddsRow';
 import {Text} from '../../components/Text';
 import type {SportKey} from '../../config/sports';
+import {useCountry} from '../../hooks/useCountry';
 import {useTheme} from '../../hooks/useTheme';
 import {useMatchOdds} from '../../hooks/useMatchDetails';
 import {useLiveOdds} from '../../sockets/hooks/useLiveOdds';
@@ -22,6 +23,7 @@ type MatchDetailsRoute = RouteProp<RootStackParamList, 'MatchDetails'>;
 
 export const MatchDetails: React.FC = () => {
   const {colors} = useTheme();
+  const {currentCountry} = useCountry();
   const {t} = useTranslation();
   const route = useRoute<MatchDetailsRoute>();
   const {matchId, sport} = route.params;
@@ -82,7 +84,7 @@ export const MatchDetails: React.FC = () => {
           <Button
             variant="primary"
             label={t('match.watch')}
-            onPress={() => openMatchRedirect()}
+            onPress={() => openMatchRedirect(currentCountry)}
             style={styles.bettingButton}
           />
         </View>

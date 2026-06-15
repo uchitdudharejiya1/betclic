@@ -23,6 +23,7 @@ import {ENV} from '../../config/env';
 import { openSeeAllMatchesRedirect } from '../../services/redirectService';
 import {todayKey, type DayItem} from '../../constants/days';
 import {SPORTS, type SportId} from '../../constants/sports';
+import {useCountry} from '../../hooks/useCountry';
 import {useFixtures} from '../../hooks/useFixtures';
 import {useTheme} from '../../hooks/useTheme';
 import type {Match} from '../../types/domain/match';
@@ -30,7 +31,6 @@ import type {Match} from '../../types/domain/match';
 const SPORT_EMOJI: Record<string, string> = {
   football: '⚽',
   basketball: '🏀',
-  tennis: '🎾',
   volleyball: '🏐',
   hockey: '🏒',
   martial: '🥊',
@@ -92,9 +92,11 @@ export const Programme: React.FC = () => {
   const limited = useMemo(() => (data ?? []).slice(0, 10), [data]);
   const sections = useMemo(() => buildSections(limited), [limited]);
 
+  const {currentCountry} = useCountry();
+
   const openAll = useCallback(() => {
-    openSeeAllMatchesRedirect();
-  }, []);
+    openSeeAllMatchesRedirect(currentCountry);
+  }, [currentCountry]);
 
   return (
     <SafeAreaView edges={['bottom']} style={[styles.safe, {backgroundColor: colors.bg}]}>

@@ -3,6 +3,7 @@ import {Linking, Pressable, StyleSheet, TouchableOpacity, View} from 'react-nati
 import {useTranslation} from 'react-i18next';
 
 import type {LeagueMatch} from '../constants/leagueMatches';
+import {useCountry} from '../hooks/useCountry';
 import {useTheme} from '../hooks/useTheme';
 import { openMatchRedirect } from '../services/redirectService';
 import {Text} from './Text';
@@ -14,6 +15,7 @@ export type ExpandedMatchRowProps = {
 
 export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast}) => {
   const {colors} = useTheme();
+  const {currentCountry} = useCountry();
   const {t} = useTranslation();
   
   let leftNode: React.ReactNode = null;
@@ -49,7 +51,7 @@ export const ExpandedMatchRow: React.FC<ExpandedMatchRowProps> = ({match, isLast
 
   return (
     <TouchableOpacity 
-    onPress={() => openMatchRedirect()}
+    onPress={() => openMatchRedirect(currentCountry)}
     style={[styles.row, !isLast && {borderBottomColor: colors.border, borderBottomWidth: 1}]}>
       <View style={styles.left}>{leftNode}</View>
       <View style={styles.middle}>

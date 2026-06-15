@@ -16,4 +16,9 @@ export type RawMmaFight = {
   category: string;
   fighters: {first: RawMmaFighter; second: RawMmaFighter};
   league?: {id: number; name: string; type: string; logo: string | null} | null;
+  round?: {
+    current: number;
+    total: number;
+    time?: string;
+  } | null;
 };

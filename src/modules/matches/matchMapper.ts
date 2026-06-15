@@ -5,9 +5,7 @@ import type {
 } from '../../types/api/basketball';
 import type {RawFootballFixture} from '../../types/api/football';
 import type {RawMmaFight} from '../../types/api/mma';
-import type {RawTennisEvent, RawTennisScore} from '../../types/api/tennis';
 import type {Match, MatchStatus} from '../../types/domain/match';
-import {hasValidTennisScore, extractTennisScores} from '../../api/services/tennis';
 
 const FOOTBALL_LIVE_SHORT = new Set([
   '1H',
@@ -126,63 +124,26 @@ const mapMmaStatus = (short: string): MatchStatus => {
   return 'live';
 };
 
-export const mapMmaFightToMatch = (f: RawMmaFight): Match => ({
-  id: String(f.id),
-  sport: 'martial',
-  competition: f.league?.name ?? f.category,
-  league: {id: String(f.league?.id ?? 0), name: f.league?.name ?? 'MMA', logo: f.league?.logo ?? null},
-  home: {id: String(f.fighters.first.id), name: f.fighters.first.name, logo: f.fighters.first.logo},
-  away: {id: String(f.fighters.second.id), name: f.fighters.second.name, logo: f.fighters.second.logo},
-  score: {home: '—', away: '—'},
-  status: mapMmaStatus(f.status.short),
-  clock: f.status.long,
-  startsAtMs: f.timestamp * 1000,
-  hasMedia: false,
-});
-
-const mapTennisStatus = (completed: boolean, commenceTime: string): MatchStatus => {
-  const now = new Date();
-  const startTime = new Date(commenceTime);
-  
-  if (completed) return 'finished';
-  if (startTime <= now) return 'live';
-  return 'scheduled';
-};
-
-export const mapTennisEventToMatch = (event: RawTennisEvent): Match => {
-  const {home: homeScore, away: awayScore} = extractTennisScores(event);
-  const hasValidScore = hasValidTennisScore(event);
+export const mapMmaFightToMatch = (f: RawMmaFight): Match => {
+  const homeScore = f.fighters.first.winner === true ? 'W' : f.fighters.first.winner === false ? 'L' : '—';
+  const awayScore = f.fighters.second.winner === true ? 'W' : f.fighters.second.winner === false ? 'L' : '—';
   
   return {
-    id: event.id,
-    sport: 'tennis',
-    competition: event.sport_title,
-    league: {id: event.sport_key, name: event.sport_title, logo: null},
-    home: {id: `home-${event.id}`, name: event.home_team, logo: null},
-    away: {id: `away-${event.id}`, name: event.away_team, logo: null},
+    id: String(f.id),
+    sport: 'martial',
+    competition: f.league?.name ?? f.category,
+    league: {id: String(f.league?.id ?? 0), name: f.league?.name ?? 'MMA', logo: f.league?.logo ?? null},
+    home: {id: String(f.fighters.first.id), name: f.fighters.first.name, logo: f.fighters.first.logo},
+    away: {id: String(f.fighters.second.id), name: f.fighters.second.name, logo: f.fighters.second.logo},
     score: {home: homeScore, away: awayScore},
-    status: mapTennisStatus(event.completed, event.commence_time),
-    clock: !hasValidScore && mapTennisStatus(event.completed, event.commence_time) === 'live' ? 'Live score unavailable' : undefined,
-    startsAtMs: new Date(event.commence_time).getTime(),
-    hasMedia: false,
-  };
-};
-
-export const mapTennisScoreToMatch = (score: RawTennisScore): Match => {
-  const {home: homeScore, away: awayScore} = extractTennisScores(score);
-  const hasValidScore = hasValidTennisScore(score);
-  
-  return {
-    id: score.id,
-    sport: 'tennis',
-    competition: score.sport_title,
-    league: {id: score.sport_key, name: score.sport_title, logo: null},
-    home: {id: `home-${score.id}`, name: score.home_team, logo: null},
-    away: {id: `away-${score.id}`, name: score.away_team, logo: null},
-    score: {home: homeScore, away: awayScore},
-    status: mapTennisStatus(score.completed, score.commence_time),
-    clock: !hasValidScore && mapTennisStatus(score.completed, score.commence_time) === 'live' ? 'Live score unavailable' : undefined,
-    startsAtMs: new Date(score.commence_time).getTime(),
+    status: mapMmaStatus(f.status.short),
+    clock: f.status.long,
+    roundInfo: f.round ? {
+      current: f.round.current,
+      total: f.round.total,
+      time: f.round.time,
+    } : undefined,
+    startsAtMs: f.timestamp * 1000,
     hasMedia: false,
   };
 };

@@ -4,11 +4,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {buildCenteredWeek, type DayItem} from '../constants/days';
-import {useLanguage} from '../hooks/useLanguage';
+import {useCountry} from '../hooks/useCountry';
 import {useTheme} from '../hooks/useTheme';
 import {Text} from './Text';
 import {useTranslation} from 'react-i18next';
 import { IMAGES } from '../assets';
+import type { CountryCode } from '../services/redirectService';
 
 export type HeaderProps = {
   selectedDayKey: DayItem['key'];
@@ -22,15 +23,16 @@ export const Header: React.FC<HeaderProps> = ({
   onCalendarPress,
 }) => {
   const {isDark, colors, toggleTheme} = useTheme();
-  const {currentLanguage, changeLanguage} = useLanguage();
+  const {currentCountry, changeCountry} = useCountry();
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
-  const [showLanguageSheet, setShowLanguageSheet] = useState(false);
+  const [showCountrySheet, setShowCountrySheet] = useState(false);
   const days = useMemo(() => buildCenteredWeek(), []);
 
-  const languages = [
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-    { code: 'pl', name: 'Polski', flag: '🇵🇱' },
+  const countries = [
+    { code: 'CI' as CountryCode, name: "Côte d'Ivoire", flag: '🇨🇮' },
+    { code: 'CM' as CountryCode, name: 'Cameroun', flag: '🇨🇲' },
+    { code: 'PL' as CountryCode, name: 'Polska', flag: '🇵🇱' },
   ];
 
   return (
@@ -43,10 +45,10 @@ export const Header: React.FC<HeaderProps> = ({
         <View style={styles.actions}>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => setShowLanguageSheet(true)}
+            onPress={() => setShowCountrySheet(true)}
             style={[styles.circleBtn, {backgroundColor: 'rgba(255, 255, 255, 0.62)'}]}>
             <Text style={styles.languageFlag}>
-              {languages.find(lang => lang.code === currentLanguage)?.flag || '🇫🇷'}
+              {countries.find(country => country.code === currentCountry)?.flag || '🇨🇮'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -100,39 +102,39 @@ export const Header: React.FC<HeaderProps> = ({
           );
         })}
       </View>
-      <Modal
-        visible={showLanguageSheet}
+            <Modal
+        visible={showCountrySheet}
         transparent={true}
         animationType="fade"
-        onRequestClose={() => setShowLanguageSheet(false)}>
+        onRequestClose={() => setShowCountrySheet(false)}>
         <View style={[styles.modalOverlay, {backgroundColor: 'rgba(0, 0, 0, 0.5)'}]}>
           <View style={[styles.modalContent, {backgroundColor: colors.card, borderColor: colors.border}]}>
             <Text variant="title" weight="semibold" style={[styles.modalTitle, {color: colors.textPrimary}]}>
-              {t('header.selectLanguage')}
+              {t('header.selectCountry')}
             </Text>
             <View style={styles.languageList}>
-              {languages.map(language => (
+              {countries.map(country => (
                 <TouchableOpacity
-                  key={language.code}
+                  key={country.code}
                   style={[
                     styles.languageItem,
                     {backgroundColor: colors.cardAlt, borderColor: colors.border},
-                    currentLanguage === language.code && [styles.languageItemSelected, {backgroundColor: colors.primary + '20', borderColor: colors.primary}],
+                    currentCountry === country.code && [styles.languageItemSelected, {backgroundColor: colors.primary + '20', borderColor: colors.primary}],
                   ]}
                   onPress={() => {
-                    changeLanguage(language.code as any);
-                    setShowLanguageSheet(false);
+                    changeCountry(country.code);
+                    setShowCountrySheet(false);
                   }}>
-                  <Text style={styles.flagText}>{language.flag}</Text>
+                  <Text style={styles.flagText}>{country.flag}</Text>
                   <Text
                     style={[
                       styles.languageName,
                       {color: colors.textPrimary},
-                      currentLanguage === language.code && [styles.languageNameSelected, {color: colors.primary}],
+                      currentCountry === country.code && [styles.languageNameSelected, {color: colors.primary}],
                     ]}>
-                    {language.name}
+                    {country.name}
                   </Text>
-                  {currentLanguage === language.code && (
+                  {currentCountry === country.code && (
                     <Ionicons name="checkmark" size={20} color={colors.primary} />
                   )}
                 </TouchableOpacity>
@@ -140,7 +142,7 @@ export const Header: React.FC<HeaderProps> = ({
             </View>
             <TouchableOpacity
               style={[styles.closeButton, {backgroundColor: colors.cardAlt}]}
-              onPress={() => setShowLanguageSheet(false)}>
+              onPress={() => setShowCountrySheet(false)}>
               <Ionicons name="close" size={24} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>

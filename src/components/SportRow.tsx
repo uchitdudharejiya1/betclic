@@ -3,6 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTranslation} from 'react-i18next';
 
+import {useCountry} from '../hooks/useCountry';
 import {useTheme} from '../hooks/useTheme';
 import { openSeeAllMatchesRedirect } from '../services/redirectService';
 import {Text} from './Text';
@@ -16,12 +17,13 @@ export type SportRowProps = {
 
 export const SportRow: React.FC<SportRowProps> = ({icon, label, count, onPress}) => {
   const {colors} = useTheme();
+  const {currentCountry} = useCountry();
   const {t} = useTranslation();
   const handlePress = () => {
     if (onPress) {
       onPress();
     } else {
-      openSeeAllMatchesRedirect();
+      openSeeAllMatchesRedirect(currentCountry);
     }
   };
   return (

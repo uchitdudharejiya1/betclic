@@ -10,7 +10,8 @@
     "calendar": "Calendrier",
     "themeDay": "Mode jour activé",
     "themeNight": "Mode nuit activé",
-    "selectLanguage": "Sélectionner la langue"
+    "selectLanguage": "Sélectionner la langue",
+    "selectCountry": "Sélectionner le pays"
   },
   "days": {
     "mon": "Lun",
@@ -59,5 +60,8 @@
     "match": "match",
     "matches": "matchs",
     "competitions": "compét."
+  },
+  "banner": {
+    "title": "Regarde tous les matchs de la Coupe du Monde de Foot"
   }
 }

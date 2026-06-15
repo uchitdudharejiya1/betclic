@@ -5,6 +5,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import {useCountry} from '../hooks/useCountry';
 import {useTheme} from '../hooks/useTheme';
 import {useLiveMatches} from '../hooks/useLiveMatches';
 import { openSeeMoreRedirect } from '../services/redirectService';
@@ -19,6 +20,7 @@ const ROUTE_ICON: Record<string, string> = {
 
 export const Tabbar: React.FC<BottomTabBarProps> = ({state, navigation}) => {
   const {colors} = useTheme();
+  const {currentCountry} = useCountry();
   const insets = useSafeAreaInsets();
   const {t} = useTranslation();
   const [seeAllOpen, setSeeAllOpen] = useState(false);
@@ -86,7 +88,7 @@ export const Tabbar: React.FC<BottomTabBarProps> = ({state, navigation}) => {
 
       <TouchableOpacity
         activeOpacity={0.85}
-        onPress={() => openSeeMoreRedirect()}
+        onPress={() => openSeeMoreRedirect(currentCountry)}
         style={[styles.cta, {backgroundColor: colors.primary}]}>
         <MaterialCommunityIcons name="menu" size={20} color="#fff" />
         <Text variant="body" weight="bold" color="#fff" style={styles.ctaLabel}>
